@@ -3,6 +3,13 @@ import { WordsContainer } from "./WordsContainer";
 import { Word } from "./Words";
 import { InputText } from "./InputText";
 
+//ADD SCORING SYSTEM
+// 60 base line
+//timer
+//sort list based on likiness
+//game over when words hit the top
+//remove words
+
 export class Sketch {
   constructor() {
     this.width = window.innerWidth;

@@ -38,6 +38,7 @@ export class InputText extends PIXI.Text {
     });
     this.setupModel();
   }
+
   setupKeyboardListener() {
     if (!this.enabled) {
       this.enabled = true;
@@ -46,19 +47,12 @@ export class InputText extends PIXI.Text {
       });
     }
   }
+
   updateInputText(e, me) {
     if (e.key === "Enter") {
       let words = this.wordsContainer.children.filter((word) => word.isWord);
-
       const tensorWords = words.map((word) => word.text);
       this.speakToTensor(this.testGuess, tensorWords);
-
-      words = words.filter((word) => {
-        // if (word.text === this.testGuess) {
-        //   return false;
-        // }
-        // return true;
-      });
       this.testGuess = "";
       me.text = "";
     } else if (e.key === "Backspace") {
@@ -69,6 +63,7 @@ export class InputText extends PIXI.Text {
       me.text = this.testGuess;
     }
   }
+
   async speakToTensor(target, words) {
     console.log(target, words);
     const embeddings = await this.model.embed(words);
@@ -88,40 +83,9 @@ export class InputText extends PIXI.Text {
     }
     console.log(`these are your words`, words);
   }
+
   async setupModel() {
     this.model = await use.load(); //tensor
     console.log("model loaded");
   }
 }
-
-// for (let i = 0; i < words.length; i++) {
-//   for (let j = i; j < words.length; j++) {
-//     const wordI = tf.slice(embeddings, [i, 0], [1]);
-//     const wordJ = tf.slice(embeddings, [j, 0], [1]);
-//     const wordITranspose = false;
-//     const wordJTranspose = true;
-
-//     const score = tf
-//       .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
-//       .dataSync();
-//     console.log(`${words[i]} -- ${words[j]}`, score);
-//     // console.log(`oidasnfoasnfsaodinfdso`, words);
-//     // console.log(`ummmmm`, score);
-//     return score;
-//   }
-// }
-
-// console.log(target, words);
-// const embeddings = await this.model.embed(words);
-// const embeddings2 = await this.model.embed([target]);
-// for (let i = 0; i < words.length; i++) {
-//   const wordI = tf.slice(embeddings, [i, 0], [1]);
-//   const wordJ = tf.slice(embeddings2, [i, 0], [1]);
-//   const wordITranspose = false;
-//   const wordJTranspose = true;
-//   const score = tf
-//     .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
-//     .dataSync();
-//   console.log(`${words[i]} -- ${target}`, score);
-// }
-// console.log(`these are your words`, words);

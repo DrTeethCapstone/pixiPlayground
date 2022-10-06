@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import * as randomWords from "random-words";
 import { Word } from "./Words";
+
 export class WordsContainer extends PIXI.Container {
   constructor() {
     super();
