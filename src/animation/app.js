@@ -24,7 +24,7 @@ export class Sketch {
   }
 
   setupWordsContainer() {
-    new InputText("type here", this.wordsContainer);
+    new InputText(this.wordsContainer);
     this.wordsContainer.positionChildren();
   }
   render() {
