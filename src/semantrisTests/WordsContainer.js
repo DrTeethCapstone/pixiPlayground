@@ -10,6 +10,7 @@ export class WordsContainer extends PIXI.Container {
     this.setupFirstChildren();
     this.position.set(window.innerWidth / 2, window.innerHeight / 2);
   }
+
   //METHOD TO ADD A NEW RANDOM WORD TO THE LIST
   addWord() {
     const newWord = new Word(randomWords());
@@ -18,8 +19,13 @@ export class WordsContainer extends PIXI.Container {
 
   //INITAL SETUP OF CHILDREN
   setupFirstChildren() {
-    this.starterWords.forEach((word) => {
-      new Word(word, this);
+    this.starterWords.forEach((word, i) => {
+      if (i === 4) {
+        const newWord = new Word(word, this, true);
+        newWord.isTarget = true;
+      } else {
+        new Word(word, this);
+      }
     });
   }
 
@@ -34,5 +40,9 @@ export class WordsContainer extends PIXI.Container {
         return true;
       }
     }
+  }
+
+  checkChildren() {
+    console.log(this.children);
   }
 }

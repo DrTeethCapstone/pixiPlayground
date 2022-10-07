@@ -13,7 +13,7 @@ export class InputText extends PIXI.Text {
       fill: 0xff1010,
       align: "center",
     });
-    console.log(new PreviousWord());
+    // console.log(new PreviousWord());
 
     //ONLY ENABLED IF USER CLICKS ON FIELD
     this.enabled = false;
@@ -23,6 +23,7 @@ export class InputText extends PIXI.Text {
     this.model = null;
     this.stage = stage;
     this.score = new Score(this.stage);
+    this.currentSimilarityScores = [];
 
     //WHITE BACKGROUND FOR INPUT FIELD
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -61,8 +62,12 @@ export class InputText extends PIXI.Text {
   updateInputText(e, me) {
     if (e.key === "Enter") {
       let words = this.wordsContainer.children.filter((word) => word.isWord);
+      let targetWord = words.filter((word) => word.isTarget);
       const tensorWords = words.map((word) => word.text);
-      this.speakToTensor(this.testGuess, tensorWords);
+
+      this.speakToTensor([this.testGuess], tensorWords);
+
+      console.log(`HELLO WORLD`, this.currentSimilarityScores);
 
       words.forEach((word) => {
         if (word.text === this.testGuess) {
@@ -71,6 +76,7 @@ export class InputText extends PIXI.Text {
           this.score.updateScore(25);
         }
       });
+
       this.testGuess = "";
       me.text = "";
     } else if (e.key === "Backspace") {
@@ -90,22 +96,27 @@ export class InputText extends PIXI.Text {
   //USER INTERACTION WITH TENSOR
   async speakToTensor(target, words) {
     //TODO: MAYBE TRY TO EMBED SOMEWHERE ELSE SOONER BEFORE TARGET IS AVAILABLE
-    const embeddings = await this.model.embed(words);
-    const embeddings2 = await this.model.embed([target]);
+    // console.log(target, words);
+    const embeddingsFromWords = await this.model.embed(words);
+    const embeddingsFromTarget = await this.model.embed(target);
     //TODO: THIS DOESN'T RETURN THE SAME INFORMATION THAT ON GOOGLE'S REF
-    for (let i = 0; i < words.length; i++) {
-      for (let j = i; j < target.length; j++) {
-        const wordI = tf.slice(embeddings, [i, 0], [1]);
-        const wordJ = tf.slice(embeddings2, [0, 0], [1]);
+    for (let i = 0; i < target.length; i++) {
+      for (let j = i; j < words.length; j++) {
+        const wordI = tf.slice(embeddingsFromTarget, [i, 0], [1]);
+        const wordJ = tf.slice(embeddingsFromWords, [j, 0], [1]);
         const wordITranspose = false;
         const wordJTranspose = true;
         const score = tf
           .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
           .dataSync();
-        console.log(`${words[i]} -- ${target}`, score);
+        console.log(`${words[j]} -- ${target}`, score);
+        this.currentSimilarityScores.push({ word: words[j], score: score[0] });
+        // console.log(typeof score[0]);
       }
     }
+
     console.log(`these are your words`, words);
+    // return [score, words[j], target]
   }
 
   //PRETRAINED MODEL

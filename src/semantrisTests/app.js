@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { WordsContainer } from "./WordsContainer";
 import { InputText } from "./InputText";
 import { Timer } from "./Timer";
-
+import { Word } from "./Words";
 // [x] GAME OVER WHEN WORDS HIT TOP OF SCREEN
 // [x] ADD SCORING SYSTEM
 // [x] REMOVE WORDS
@@ -55,6 +55,7 @@ export class Sketch {
 
       if (this.wordsContainer.positionChildren()) {
         console.log("gameover!!!");
+        console.log(this.wordsContainer);
         this.app.stop();
       }
     });
