@@ -1,7 +1,5 @@
 node_modules
 README.md
-src/slidersJS
-src/spiralJS
-src/testsJS
 public/bundle.js
 public/bundle.js.map
+src/spiral/
