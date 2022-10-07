@@ -1,23 +1,29 @@
 import * as PIXI from "pixi.js";
-import { Word } from "./Words";
 import * as tf from "@tensorflow/tfjs";
 import * as use from "@tensorflow-models/universal-sentence-encoder";
+import { Score } from "./Score";
 
+//CREATE A NEW INSTANCE OF A USER INPUT FIELD
 export class InputText extends PIXI.Text {
-  constructor(parent = null) {
+  constructor(parent = null, stage) {
     super("type here", {
       fontFamily: "Arial",
       fontSize: 24,
       fill: 0xff1010,
       align: "center",
     });
+    console.log(this.getGlobalPosition());
 
+    //ONLY ENABLED IF USER CLICKS ON FIELD
     this.enabled = false;
     this.testGuess = "";
     this.wordsContainer = parent;
     this.inputContainer = new PIXI.Container();
     this.model = null;
+    this.stage = stage;
+    this.score = new Score(this.stage);
 
+    //WHITE BACKGROUND FOR INPUT FIELD
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.tint = 0xffffff;
     bg.anchor.set(0.5);
@@ -36,6 +42,8 @@ export class InputText extends PIXI.Text {
       this.style.fill = 0x00ff00;
       this.setupKeyboardListener();
     });
+
+    //lOADS THE MODEL WHEN THEN USER INPUT IS LOADED
     this.setupModel();
   }
 
@@ -48,11 +56,20 @@ export class InputText extends PIXI.Text {
     }
   }
 
+  //KEYBOARD
   updateInputText(e, me) {
     if (e.key === "Enter") {
       let words = this.wordsContainer.children.filter((word) => word.isWord);
       const tensorWords = words.map((word) => word.text);
       this.speakToTensor(this.testGuess, tensorWords);
+
+      words.forEach((word) => {
+        if (word.text === this.testGuess) {
+          console.log("match");
+          this.wordsContainer.removeChild(word);
+          this.score.updateScore(25);
+        }
+      });
       this.testGuess = "";
       me.text = "";
     } else if (e.key === "Backspace") {
@@ -64,8 +81,14 @@ export class InputText extends PIXI.Text {
     }
   }
 
+  //TODO: MAYBE STORE THIS SOMEWHERE BEFORE USING SPEAK TO TENSOR
+  async createTensorWordList(words) {
+    return await this.model.embed(words);
+  }
+
+  //USER INTERACTION WITH TENSOR
   async speakToTensor(target, words) {
-    // console.log(target, words);
+    //TODO: MAYBE TRY TO EMBED SOMEWHERE ELSE SOONER BEFORE TARGET IS AVAILABLE
     const embeddings = await this.model.embed(words);
     const embeddings2 = await this.model.embed([target]);
     //TODO: THIS DOESN'T RETURN THE SAME INFORMATION THAT ON GOOGLE'S REF
@@ -84,8 +107,9 @@ export class InputText extends PIXI.Text {
     console.log(`these are your words`, words);
   }
 
+  //PRETRAINED MODEL
   async setupModel() {
-    this.model = await use.load(); //tensor
+    this.model = await use.load();
     console.log("model loaded");
   }
 }

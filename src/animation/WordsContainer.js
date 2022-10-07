@@ -2,25 +2,29 @@ import * as PIXI from "pixi.js";
 import * as randomWords from "random-words";
 import { Word } from "./Words";
 
+//CREATE A NEW INSTANCE OF A PIXI CONTAINER USED TO STORE LIST OF WORDS
 export class WordsContainer extends PIXI.Container {
   constructor() {
     super();
-    this.position.set(window.innerWidth / 2, window.innerHeight / 2);
     this.starterWords = randomWords(5);
     this.setupFirstChildren();
+    this.position.set(window.innerWidth / 2, window.innerHeight / 2);
   }
-
-  checkWordsContainer() {}
-
+  //METHOD TO ADD A NEW RANDOM WORD TO THE LIST
   addWord() {
     const newWord = new Word(randomWords());
     this.addChild(newWord);
   }
+
+  //INITAL SETUP OF CHILDREN
   setupFirstChildren() {
     this.starterWords.forEach((word) => {
       new Word(word, this);
     });
   }
+
+  //FUNCTION TO REPOSITION CHILDREN IN THEIR CORRECT POSITION
+  //rETURNS TRUE OR FALSE IF A WORD IS TOUCHING THE TOP
   positionChildren() {
     const children = this.children.filter((word) => word.isWord);
     for (let i = 0; i < children.length; i++) {
