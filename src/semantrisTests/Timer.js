@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import img from "../animation/img/caution.jpg";
+import img from "../semantrisTests/img/caution.jpg";
 
 //CREATE A NEW INSTANCE OF TIMER OBJECT
 export class Timer extends PIXI.Sprite {

@@ -5,7 +5,7 @@ export class Score extends PIXI.Text {
   constructor(parent = null) {
     super(0, {
       fontFamily: "Arial",
-      fontSize: 48,
+      fontSize: 64,
       fill: 0xadd3e6,
       align: "center",
     });

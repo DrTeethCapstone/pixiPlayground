@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   mode: "development",
-  entry: "./src/animation/index.js",
+  entry: "./src/semantrisTests/index.js",
   output: {
     path: path.resolve(__dirname, "./public"),
     publicPath: "/",
