@@ -6,7 +6,7 @@ import { Timer } from "./Timer";
 // [x] GAME OVER WHEN WORDS HIT TOP OF SCREEN
 // [x] ADD SCORING SYSTEM
 // [x] REMOVE WORDS
-//[x] TIMER
+// [x] TIMER
 
 // 60 base line
 //sort list based on likiness
@@ -21,6 +21,7 @@ export class Sketch {
       resolution: window.devicePixelRatio || 1,
       resizeTo: window,
     });
+
     document.body.appendChild(this.app.view);
 
     //TIME STATE
@@ -46,10 +47,12 @@ export class Sketch {
   render() {
     this.app.ticker.add((delta) => {
       this.time += 0.05;
+
       if (Math.floor(this.time) === 10) {
         this.wordsContainer.addWord();
         this.time = 0;
       }
+
       if (this.wordsContainer.positionChildren()) {
         console.log("gameover!!!");
         this.app.stop();

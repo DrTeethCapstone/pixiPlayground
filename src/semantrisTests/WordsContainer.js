@@ -24,7 +24,7 @@ export class WordsContainer extends PIXI.Container {
   }
 
   //FUNCTION TO REPOSITION CHILDREN IN THEIR CORRECT POSITION
-  //rETURNS TRUE OR FALSE IF A WORD IS TOUCHING THE TOP
+  //RETURNS TRUE OR FALSE IF A WORD IS TOUCHING THE TOP
   positionChildren() {
     const children = this.children.filter((word) => word.isWord);
     for (let i = 0; i < children.length; i++) {

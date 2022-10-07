@@ -10,6 +10,8 @@ export class Word extends PIXI.Text {
       fill: 0x5dade2,
       align: "center",
     });
+
+    this.isTarget = false;
     this.parent = parent;
     this.isWord = true;
     this.anchor.set(0.5);
@@ -18,6 +20,7 @@ export class Word extends PIXI.Text {
       this.parent.addChild(this);
     }
   }
+
   //METHOD TO UPDATE WORDS
   updateWord(word) {
     this.text = word;

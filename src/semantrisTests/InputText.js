@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import * as tf from "@tensorflow/tfjs";
 import * as use from "@tensorflow-models/universal-sentence-encoder";
 import { Score } from "./Score";
+import { PreviousWord } from "./PreviousWord";
 
 //CREATE A NEW INSTANCE OF A USER INPUT FIELD
 export class InputText extends PIXI.Text {
@@ -12,7 +13,7 @@ export class InputText extends PIXI.Text {
       fill: 0xff1010,
       align: "center",
     });
-    console.log(this.getGlobalPosition());
+    console.log(new PreviousWord());
 
     //ONLY ENABLED IF USER CLICKS ON FIELD
     this.enabled = false;
