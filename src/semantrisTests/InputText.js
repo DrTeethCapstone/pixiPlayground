@@ -3,7 +3,10 @@ import * as tf from "@tensorflow/tfjs";
 import * as use from "@tensorflow-models/universal-sentence-encoder";
 import { Score } from "./Score";
 import { PreviousWord } from "./PreviousWord";
+import { gsap } from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
 
+gsap.registerPlugin(PixiPlugin);
 //CREATE A NEW INSTANCE OF A USER INPUT FIELD
 export class InputText extends PIXI.Text {
   constructor(parent = null, stage) {
@@ -41,6 +44,7 @@ export class InputText extends PIXI.Text {
 
     if (parent) parent.addChild(this.inputContainer);
     this.on("pointerdown", (e) => {
+      // gsap.to(this, { rotation: 6.28, duration: 1 });
       this.style.fill = 0x00ff00;
       this.setupKeyboardListener();
     });
@@ -58,22 +62,41 @@ export class InputText extends PIXI.Text {
     }
   }
 
+  // loadAssets() {
+  //   const loader = PIXI.Loader;
+  //   loader.load("img/");
+  // }
+
+  //VALIDATION FOR INPUT WORD BEFORE SENDING WORD TO TENSOR
+  validateWordInput(target, inputString) {
+    return inputString === target;
+  }
+
   //KEYBOARD
   updateInputText(e, me) {
     if (e.key === "Enter") {
+      //ARRAY OF WORD OBJECTS
       let words = this.wordsContainer.children.filter((word) => word.isWord);
-      let targetWord = words.filter((word) => word.isTarget);
+      console.log(words);
+      //TARGET WORD OBJECT
+      let [targetWord] = words.filter((word) => word.isTarget);
+      //ARRAY OF WORDS - JUST THE STRINGS
       const tensorWords = words.map((word) => word.text);
 
-      this.speakToTensor([this.testGuess], tensorWords);
+      // console.log("what is target word", targetWord);
+      // console.log(targetWord);
+      this.results = this.validateWordInput(targetWord.text, this.testGuess);
+      console.log(this.results);
 
-      console.log(`HELLO WORLD`, this.currentSimilarityScores);
+      this.speakToTensor([this.testGuess], tensorWords);
 
       words.forEach((word) => {
         if (word.text === this.testGuess) {
           console.log("match");
+          this.wordsContainer.addWord(true);
           this.wordsContainer.removeChild(word);
           this.score.updateScore(25);
+        } else {
         }
       });
 
@@ -96,7 +119,6 @@ export class InputText extends PIXI.Text {
   //USER INTERACTION WITH TENSOR
   async speakToTensor(target, words) {
     //TODO: MAYBE TRY TO EMBED SOMEWHERE ELSE SOONER BEFORE TARGET IS AVAILABLE
-    // console.log(target, words);
     const embeddingsFromWords = await this.model.embed(words);
     const embeddingsFromTarget = await this.model.embed(target);
     //TODO: THIS DOESN'T RETURN THE SAME INFORMATION THAT ON GOOGLE'S REF
@@ -109,14 +131,10 @@ export class InputText extends PIXI.Text {
         const score = tf
           .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
           .dataSync();
-        console.log(`${words[j]} -- ${target}`, score);
+        // console.log(`${words[j]} -- ${target}`, score);
         this.currentSimilarityScores.push({ word: words[j], score: score[0] });
-        // console.log(typeof score[0]);
       }
     }
-
-    console.log(`these are your words`, words);
-    // return [score, words[j], target]
   }
 
   //PRETRAINED MODEL

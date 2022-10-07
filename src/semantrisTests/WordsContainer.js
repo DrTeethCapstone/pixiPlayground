@@ -12,9 +12,12 @@ export class WordsContainer extends PIXI.Container {
   }
 
   //METHOD TO ADD A NEW RANDOM WORD TO THE LIST
-  addWord() {
-    const newWord = new Word(randomWords());
-    this.addChild(newWord);
+  addWord(target) {
+    if (target) {
+      new Word(randomWords(), this, true);
+    } else {
+      new Word(randomWords(), this);
+    }
   }
 
   //INITAL SETUP OF CHILDREN
