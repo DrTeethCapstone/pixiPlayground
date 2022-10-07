@@ -61,7 +61,7 @@ export class InputText extends PIXI.Text {
     if (e.key === "Enter") {
       let words = this.wordsContainer.children.filter((word) => word.isWord);
       const tensorWords = words.map((word) => word.text);
-      this.speakToTensor(this.testGuess, tensorWords);
+      this.speakToTensor([this.testGuess], tensorWords);
 
       words.forEach((word) => {
         if (word.text === this.testGuess) {
@@ -86,26 +86,30 @@ export class InputText extends PIXI.Text {
     return await this.model.embed(words);
   }
 
+
   //USER INTERACTION WITH TENSOR
   async speakToTensor(target, words) {
     //TODO: MAYBE TRY TO EMBED SOMEWHERE ELSE SOONER BEFORE TARGET IS AVAILABLE
-    const embeddings = await this.model.embed(words);
-    const embeddings2 = await this.model.embed([target]);
+    // console.log(target, words);
+    const embeddingsFromWords = await this.model.embed(words);
+    const embeddingsFromTarget = await this.model.embed(target);
     //TODO: THIS DOESN'T RETURN THE SAME INFORMATION THAT ON GOOGLE'S REF
-    for (let i = 0; i < words.length; i++) {
-      for (let j = i; j < target.length; j++) {
-        const wordI = tf.slice(embeddings, [i, 0], [1]);
-        const wordJ = tf.slice(embeddings2, [0, 0], [1]);
+    for (let i = 0; i < target.length; i++) {
+      for (let j = i; j < words.length; j++) {
+        const wordI = tf.slice(embeddingsFromTarget, [i, 0], [1]);
+        const wordJ = tf.slice(embeddingsFromWords, [j, 0], [1]);
         const wordITranspose = false;
         const wordJTranspose = true;
         const score = tf
           .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
           .dataSync();
-        console.log(`${words[i]} -- ${target}`, score);
+        console.log(`${words[j]} -- ${target}`, score);
       }
     }
     console.log(`these are your words`, words);
+    // return [score, words[j], target]
   }
+
 
   //PRETRAINED MODEL
   async setupModel() {
