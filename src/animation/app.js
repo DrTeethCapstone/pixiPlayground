@@ -2,12 +2,12 @@ import * as PIXI from "pixi.js";
 import { WordsContainer } from "./WordsContainer";
 import { Word } from "./Words";
 import { InputText } from "./InputText";
+//game over when words hit the top
 
 //ADD SCORING SYSTEM
-// 60 base line
 //timer
+// 60 base line
 //sort list based on likiness
-//game over when words hit the top
 //remove words
 
 export class Sketch {
@@ -34,14 +34,18 @@ export class Sketch {
     new InputText(this.wordsContainer);
     this.wordsContainer.positionChildren();
   }
+
   render() {
     this.app.ticker.add((delta) => {
       this.time += 0.1;
       if (Math.floor(this.time) === 10) {
-        // this.wordsContainer.addWord();
+        this.wordsContainer.addWord();
         this.time = 0;
       }
-      this.wordsContainer.positionChildren();
+      if (this.wordsContainer.positionChildren()) {
+        console.log("gameover!!!");
+        this.app.stop();
+      }
     });
   }
 }

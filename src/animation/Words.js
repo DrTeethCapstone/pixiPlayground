@@ -9,7 +9,6 @@ export class Word extends PIXI.Text {
       align: "center",
     });
 
-    console.log(this);
     this.index = 0;
     this.parent = parent;
     this.children = [];

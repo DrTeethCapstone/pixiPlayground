@@ -9,6 +9,9 @@ export class WordsContainer extends PIXI.Container {
     this.starterWords = randomWords(5);
     this.setupFirstChildren();
   }
+
+  checkWordsContainer() {}
+
   addWord() {
     const newWord = new Word(randomWords());
     this.addChild(newWord);
@@ -20,8 +23,12 @@ export class WordsContainer extends PIXI.Container {
   }
   positionChildren() {
     const children = this.children.filter((word) => word.isWord);
-    children.forEach((word, i) => {
+    for (let i = 0; i < children.length; i++) {
+      const word = children[i];
       word.position.y = -word.height * i;
-    });
+      if (word.getGlobalPosition().y < 0) {
+        return true;
+      }
+    }
   }
 }

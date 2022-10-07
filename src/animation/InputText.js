@@ -65,7 +65,7 @@ export class InputText extends PIXI.Text {
   }
 
   async speakToTensor(target, words) {
-    console.log(target, words);
+    // console.log(target, words);
     const embeddings = await this.model.embed(words);
     const embeddings2 = await this.model.embed([target]);
     //TODO: THIS DOESN'T RETURN THE SAME INFORMATION THAT ON GOOGLE'S REF
