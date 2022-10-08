@@ -13,16 +13,15 @@ export class InputText extends PIXI.Text {
       fill: 0xff1010,
       align: "center",
     });
-    // console.log(new PreviousWord());
 
+    this.testGuess = "";
+    this.parent = parent;
     //ONLY ENABLED IF USER CLICKS ON FIELD
     this.enabled = false;
-    this.testGuess = "";
-    this.wordsContainer = parent;
+
     this.inputContainer = new PIXI.Container();
     this.model = null;
     this.stage = stage;
-    this.score = new Score(this.stage);
     this.currentSimilarityScores = [];
 
     //WHITE BACKGROUND FOR INPUT FIELD
@@ -36,7 +35,7 @@ export class InputText extends PIXI.Text {
     this.inputContainer.addChild(bg);
     this.inputContainer.addChild(this);
 
-    this.inputContainer.position.y += this.inputContainer.height;
+    // this.inputContainer.position.y += this.inputContainer.height;
     this.interactive = true;
 
     if (parent) {
@@ -75,7 +74,7 @@ export class InputText extends PIXI.Text {
   updateInputText(e, me) {
     if (e.key === "Enter") {
       //ARRAY OF WORD OBJECTS
-      let words = this.wordsContainer.children.filter((word) => word.isWord);
+      let words = this.parent.children.filter((word) => word.isWord);
       console.log(words);
       //TARGET WORD OBJECT
       let [targetWord] = words.filter((word) => word.isTarget);
@@ -92,9 +91,9 @@ export class InputText extends PIXI.Text {
       words.forEach((word) => {
         if (word.text === this.testGuess) {
           console.log("match");
-          this.wordsContainer.removeChild(word);
+          this.parent.removeChild(word);
           this.score.updateScore(25);
-          this.wordsContainer.addWord(true);
+          this.parent.addWord(true);
         } else {
         }
       });

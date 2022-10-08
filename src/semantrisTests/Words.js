@@ -14,22 +14,22 @@ export class Word extends PIXI.Text {
       align: "center",
     });
 
+    this.parent = parent;
+    this.anchor.set(0.5, 1);
+    this.isWord = true;
+
     if (isTarget) {
       this.isTarget = isTarget;
       this.style.fill = 0xffffff;
     }
 
-    this.parent = parent;
-    this.isWord = true;
-    this.anchor.set(0.5, 1);
-
     if (this.parent) {
       this.index = this.parent.children.length;
       this.parent.addChild(this);
       this.position.y = -this.parent.getGlobalPosition().y;
-      console.log(this.position.y);
     }
-    this.updatePosition();
+
+    // this.updatePosition();
   }
 
   updatePosition() {
