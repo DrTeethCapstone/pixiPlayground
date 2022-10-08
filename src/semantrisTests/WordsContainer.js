@@ -4,23 +4,26 @@ import { Word } from "./Words";
 
 //CREATE A NEW INSTANCE OF A PIXI CONTAINER USED TO STORE LIST OF WORDS
 export class WordsContainer extends PIXI.Container {
-  constructor() {
+  constructor(parent) {
     super();
+    this.parent = parent;
     this.starterWords = randomWords(5);
     this.setupFirstChildren();
-    this.position.set(window.innerWidth / 2, window.innerHeight / 2);
+
+    if (this.parent) {
+      this.position.y = this.parent.height;
+      this.parent.addChild(this);
+    }
   }
 
   //METHOD TO ADD A NEW RANDOM WORD TO THE LIST
   addWord(target) {
-    if (target) {
-      new Word(randomWords(), this, true);
-    } else {
-      new Word(randomWords(), this);
-    }
+    target
+      ? new Word(randomWords(), this, true)
+      : new Word(randomWords(), this);
   }
 
-  //INITAL SETUP OF CHILDREN
+  //TAKE THE ARRAY OF RANDOM WORDS AND CREATE NEW WORD OBJECTS
   setupFirstChildren() {
     this.starterWords.forEach((word, i) => {
       if (i === 4) {
@@ -34,18 +37,14 @@ export class WordsContainer extends PIXI.Container {
 
   //FUNCTION TO REPOSITION CHILDREN IN THEIR CORRECT POSITION
   //RETURNS TRUE OR FALSE IF A WORD IS TOUCHING THE TOP
-  positionChildren() {
-    const children = this.children.filter((word) => word.isWord);
-    for (let i = 0; i < children.length; i++) {
-      const word = children[i];
-      word.position.y = -word.height * i;
-      if (word.getGlobalPosition().y < 0) {
-        return true;
-      }
-    }
-  }
-
-  checkChildren() {
-    console.log(this.children);
-  }
+  // positionChildren() {
+  //   const children = this.children.filter((word) => word.isWord);
+  //   for (let i = 0; i < children.length; i++) {
+  //     const word = children[i];
+  //     word.position.y = -word.height * i;
+  //     if (word.getGlobalPosition().y < 0) {
+  //       return true;
+  //     }
+  //   }
+  // }
 }

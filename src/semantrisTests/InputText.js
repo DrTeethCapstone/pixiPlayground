@@ -3,10 +3,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as use from "@tensorflow-models/universal-sentence-encoder";
 import { Score } from "./Score";
 import { PreviousWord } from "./PreviousWord";
-import { gsap } from "gsap";
-import { PixiPlugin } from "gsap/PixiPlugin";
 
-gsap.registerPlugin(PixiPlugin);
 //CREATE A NEW INSTANCE OF A USER INPUT FIELD
 export class InputText extends PIXI.Text {
   constructor(parent = null, stage) {
@@ -42,7 +39,9 @@ export class InputText extends PIXI.Text {
     this.inputContainer.position.y += this.inputContainer.height;
     this.interactive = true;
 
-    if (parent) parent.addChild(this.inputContainer);
+    if (parent) {
+      parent.addChild(this.inputContainer);
+    }
     this.on("pointerdown", (e) => {
       // gsap.to(this, { rotation: 6.28, duration: 1 });
       this.style.fill = 0x00ff00;
@@ -93,9 +92,9 @@ export class InputText extends PIXI.Text {
       words.forEach((word) => {
         if (word.text === this.testGuess) {
           console.log("match");
-          this.wordsContainer.addWord(true);
           this.wordsContainer.removeChild(word);
           this.score.updateScore(25);
+          this.wordsContainer.addWord(true);
         } else {
         }
       });
@@ -113,7 +112,8 @@ export class InputText extends PIXI.Text {
 
   //TODO: MAYBE STORE THIS SOMEWHERE BEFORE USING SPEAK TO TENSOR
   async createTensorWordList(words) {
-    return await this.model.embed(words);
+    await this.model.embed(words);
+    return tf.slice(embeddingsFromWords, [j, 0], [1]);
   }
 
   //USER INTERACTION WITH TENSOR
