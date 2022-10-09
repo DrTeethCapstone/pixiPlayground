@@ -5,6 +5,8 @@ import { WordsContainer } from "./WordsContainer";
 import { InputText } from "./InputText";
 import { Timer } from "./Timer";
 import { Word } from "./Words";
+
+//ANIMATION PLUGINS
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 gsap.registerPlugin(PixiPlugin);
@@ -28,12 +30,16 @@ export class Sketch {
     //CREATE GAME CONTAINER AND STORE ALL GAME CONTAINERS/ELEMENTS INSIDE
     this.gameContainer = new GameContainer(this.app.stage);
     this.inputContainer = new InputContainer(this.gameContainer);
+    this.inputContainer.input.setupModel();
     this.wordsContainer = new WordsContainer(this.gameContainer);
 
+    //WHEN THIS COMPONENT IS CREATED, THE ELEMENT WILL ANIMATE IN
     this.animateElementsIn();
     //TIME STATE
     // const timer = new Timer(this.app.stage);
     this.time = 0;
+
+    //THIS CURRENTLY INITIATES THE GAME LOOP
     this.render();
   }
   animateElementsIn() {
@@ -50,10 +56,6 @@ export class Sketch {
 
   //RUNS GAME LOOP AND TRIGGERS THINGS THAT SHOULD RENDER ON EACH FRAME
   render() {
-    //LOAD TENSOR MODEL
-    this.inputContainer.input.setupModel();
-
-    // console.log(this.wordsContainer.children);
     this.app.ticker.add((delta) => {
       this.time += 0.05;
 

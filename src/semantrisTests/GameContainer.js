@@ -8,6 +8,7 @@ export class GameContainer extends PIXI.Container {
     super();
     this.parent = parent;
     this.alpha = 0;
+
     //BACKGROUND PLACED IN CONTAINER FOR VISIBILITY
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.tint = 0xc6e2ff;
@@ -16,7 +17,6 @@ export class GameContainer extends PIXI.Container {
     this.addChild(bg);
     //GAME CONATINER ANCHOR POINT IS CENTER - TOP
     bg.anchor.set(0.5, 0);
-
     // this.visible = false;
 
     if (this.parent) {

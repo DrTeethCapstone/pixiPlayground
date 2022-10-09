@@ -1,4 +1,6 @@
 import * as PIXI from "pixi.js";
+
+//ANIMATION PLUGINS
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 gsap.registerPlugin(PixiPlugin);
@@ -28,13 +30,29 @@ export class Word extends PIXI.Text {
       this.parent.addChild(this);
       this.position.y = -this.parent.getGlobalPosition().y;
     }
-
-    // this.updatePosition();
   }
-  updateIndex() {}
+
+  //HIGHTLIGHTS WORD IN RED IF GUESS WASN'T VALID
+  invalidGuess(num) {
+    const originalText = this.text;
+    const tempText = `(${originalText.slice(0, num)})${originalText.slice(
+      num
+    )}`;
+    this.text = tempText;
+    setTimeout(() => {
+      this.text = originalText;
+      this.style.fill = 0xffffff;
+    }, 1500);
+    gsap.to(this.style, { fill: "red", duration: 1 });
+  }
 
   updatePosition() {
     gsap.to(this, { y: -this.height * this.index, duration: 1 });
+  }
+
+  removeWord() {
+    gsap.to(this, { x: -100, duration: 4 });
+    this.parent.removeChild(this);
   }
 
   //METHOD TO UPDATE WORDS

@@ -17,6 +17,7 @@ export class InputContainer extends PIXI.Container {
     }
     this.visible = false;
   }
+
   fromOffScreen() {
     this.visible = true;
     gsap.to(this, {
@@ -24,6 +25,7 @@ export class InputContainer extends PIXI.Container {
       duration: 1,
     });
   }
+
   toOffScreen() {
     gsap.to(this, {
       y: this.parent.height + this.height / 2,

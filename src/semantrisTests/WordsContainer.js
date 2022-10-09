@@ -7,7 +7,8 @@ export class WordsContainer extends PIXI.Container {
   constructor(parent) {
     super();
     this.parent = parent;
-    this.starterWords = randomWords(10);
+    this.starterWords = randomWords(9);
+    this.target = null;
 
     if (this.parent) {
       this.parent.addChild(this);
@@ -32,15 +33,35 @@ export class WordsContainer extends PIXI.Container {
 
   //TAKE THE ARRAY OF RANDOM WORDS AND CREATE NEW WORD OBJECTS AND UPDATE THEIR POSIITON
   setupFirstChildren() {
-    this.starterWords.forEach((word, i) => {
-      if (i === 4) {
-        const target = new Word(word, this, true);
-        // target.updatePosition();
-        target.isTarget = true;
-      } else {
-        const newWord = new Word(word, this);
-        // newWord.updatePosition();
-      }
+    this.starterWords.forEach((word) => {
+      new Word(word, this);
     });
+    const target = new Word(randomWords(), this, true);
+    this.target = target;
+  }
+
+  dropChildrenPosition() {
+    this.children.forEach((word) => word.updatePosition());
+    while (this.children.length < 9) {
+      const newWord = new Word(randomWords(), this);
+      newWord.updatePosition();
+    }
+    if (this.children.length === 9) {
+      const target = new Word(randomWords(), this, true);
+      target.updatePosition();
+      this.target = target;
+    }
+  }
+
+  checkTargetPosition() {
+    if (this.target) {
+      if (this.target.index <= 3) {
+        for (let i = 0; i < 4; i++) {
+          this.removeChild(this.children[0]);
+        }
+        this.children.forEach((word, i) => (word.index = i));
+      }
+    }
+    this.dropChildrenPosition();
   }
 }
