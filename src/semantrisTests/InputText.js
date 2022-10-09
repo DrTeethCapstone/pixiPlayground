@@ -14,13 +14,14 @@ export class InputText extends PIXI.Text {
       align: "center",
     });
 
-    this.testGuess = "";
+    this.interactive = true;
+    this.model = null;
     this.parent = parent;
+    this.userGuess = "";
     //ONLY ENABLED IF USER CLICKS ON FIELD
     this.enabled = false;
 
-    this.inputContainer = new PIXI.Container();
-    this.model = null;
+    /////////////////////////////////////////////////////
     this.stage = stage;
     this.currentSimilarityScores = [];
 
@@ -31,24 +32,19 @@ export class InputText extends PIXI.Text {
     bg.height = this.height + 10;
     bg.width = 300;
 
+    this.inputContainer = new PIXI.Container();
     this.anchor.set(0.5);
     this.inputContainer.addChild(bg);
     this.inputContainer.addChild(this);
 
-    // this.inputContainer.position.y += this.inputContainer.height;
-    this.interactive = true;
-
     if (parent) {
       parent.addChild(this.inputContainer);
     }
+
     this.on("pointerdown", (e) => {
-      // gsap.to(this, { rotation: 6.28, duration: 1 });
       this.style.fill = 0x00ff00;
       this.setupKeyboardListener();
     });
-
-    //lOADS THE MODEL WHEN THEN USER INPUT IS LOADED
-    this.setupModel();
   }
 
   setupKeyboardListener() {
@@ -60,11 +56,6 @@ export class InputText extends PIXI.Text {
     }
   }
 
-  // loadAssets() {
-  //   const loader = PIXI.Loader;
-  //   loader.load("img/");
-  // }
-
   //VALIDATION FOR INPUT WORD BEFORE SENDING WORD TO TENSOR
   validateWordInput(target, inputString) {
     return inputString === target;
@@ -74,39 +65,48 @@ export class InputText extends PIXI.Text {
   updateInputText(e, me) {
     if (e.key === "Enter") {
       //ARRAY OF WORD OBJECTS
-      let words = this.parent.children.filter((word) => word.isWord);
-      console.log(words);
+      let words = this.parent.parent.parent.children[2].children;
       //TARGET WORD OBJECT
       let [targetWord] = words.filter((word) => word.isTarget);
-      //ARRAY OF WORDS - JUST THE STRINGS
-      const tensorWords = words.map((word) => word.text);
 
+      //ARRAY OF WORDS -- IN STRINGS
+      const tensorWords = words.map((word) => word.text);
+      console.log({ words, targetWord, tensorWords });
       // console.log("what is target word", targetWord);
       // console.log(targetWord);
-      this.results = this.validateWordInput(targetWord.text, this.testGuess);
+      this.results = this.validateWordInput(
+        targetWord.text,
+        this.userGuess.toLowerCase()
+      );
       console.log(this.results);
 
-      this.speakToTensor([this.testGuess], tensorWords);
+      this.speakToTensor([this.userGuess], tensorWords, words);
 
-      words.forEach((word) => {
-        if (word.text === this.testGuess) {
-          console.log("match");
-          this.parent.removeChild(word);
-          this.score.updateScore(25);
-          this.parent.addWord(true);
-        } else {
-        }
-      });
+      // words.forEach((word) => {
+      //   if (word.text === this.userGuess) {
+      //     console.log("match");
+      //     this.parent.removeChild(word);
+      //     this.score.updateScore(25);
+      //     this.parent.addWord(true);
+      //   } else {
+      //   }
+      // });
 
-      this.testGuess = "";
+      this.userGuess = "";
       me.text = "";
     } else if (e.key === "Backspace") {
-      this.testGuess = this.testGuess.slice(0, this.testGuess.length - 1);
-      me.text = this.testGuess;
+      this.userGuess = this.userGuess.slice(0, this.userGuess.length - 1);
+      me.text = this.userGuess;
     } else {
-      this.testGuess += e.key;
-      me.text = this.testGuess;
+      if (this.isLetter(e.key)) {
+        this.userGuess += e.key.toLowerCase();
+        me.text = this.userGuess;
+      }
     }
+  }
+  //QUICK FUNCTION TO CHECK IF A KEY CODE IS A LETTER IN THE ALPHABET
+  isLetter(char) {
+    return char.length === 1 && char.match(/[a-z]/i);
   }
 
   //TODO: MAYBE STORE THIS SOMEWHERE BEFORE USING SPEAK TO TENSOR
@@ -116,7 +116,7 @@ export class InputText extends PIXI.Text {
   }
 
   //USER INTERACTION WITH TENSOR
-  async speakToTensor(target, words) {
+  async speakToTensor(target, words, wordObjects) {
     //TODO: MAYBE TRY TO EMBED SOMEWHERE ELSE SOONER BEFORE TARGET IS AVAILABLE
     const embeddingsFromWords = await this.model.embed(words);
     const embeddingsFromTarget = await this.model.embed(target);
@@ -131,9 +131,25 @@ export class InputText extends PIXI.Text {
           .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
           .dataSync();
         // console.log(`${words[j]} -- ${target}`, score);
+        // console.log({ words, score: score[0], wordsJ: words[j] });
         this.currentSimilarityScores.push({ word: words[j], score: score[0] });
+        wordObjects[j].similarityScore = score[0];
+        // console.log({ words, wordObjects });
       }
     }
+    this.assignSimilarityIndex(wordObjects);
+  }
+
+  assignSimilarityIndex(wordsObjectArray) {
+    wordsObjectArray.sort((a, b) => {
+      return b.similarityScore - a.similarityScore;
+    });
+    wordsObjectArray.forEach((word, i) => {
+      word.index = i;
+
+      //THIS WILL ANIMATE THE WORDS INTO THE NEW PLACE
+      word.updatePosition();
+    });
   }
 
   //PRETRAINED MODEL

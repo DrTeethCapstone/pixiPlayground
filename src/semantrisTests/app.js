@@ -34,32 +34,31 @@ export class Sketch {
     //TIME STATE
     // const timer = new Timer(this.app.stage);
     this.time = 0;
-
     this.render();
   }
   animateElementsIn() {
+    this.gameContainer.animateIn();
     this.inputContainer.fromOffScreen();
-  }
-  animateInWords() {
-    // gsap.to(this.wordsContainer, {
-    //   y: this.gameContainer.height - this.wordsContainer.height,
-    //   duration: 1,
-    // });
-    // this.wordsContainer.setupFirstChildren();
+    this.wordsContainer.setupFirstChildren();
+    this.wordsContainer.children.forEach((word) => word.updatePosition());
   }
 
   //CREATE USER INPUT FIELD AND ADD IT TO WORDS CONTAINER < CAN BE SEPARATED
   setupWordsContainer() {
-    new InputText(this.wordsContainer, this.app.stage);
+    new InputText(this.inputContainer, this.app.stage);
   }
 
   //RUNS GAME LOOP AND TRIGGERS THINGS THAT SHOULD RENDER ON EACH FRAME
   render() {
+    //LOAD TENSOR MODEL
+    this.inputContainer.input.setupModel();
+
+    // console.log(this.wordsContainer.children);
     this.app.ticker.add((delta) => {
       this.time += 0.05;
 
       if (Math.floor(this.time) === 10) {
-        this.wordsContainer.addWord();
+        // this.wordsContainer.addWord();
         this.time = 0;
       }
 

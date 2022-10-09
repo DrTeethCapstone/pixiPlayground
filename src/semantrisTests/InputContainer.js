@@ -9,7 +9,6 @@ export class InputContainer extends PIXI.Container {
   constructor(parent) {
     super();
     this.input = new InputText(this);
-    this.input.change = this.toOffScreen;
     this.parent = parent;
     if (this.parent) {
       this.parent.addChild(this);
@@ -21,7 +20,7 @@ export class InputContainer extends PIXI.Container {
   fromOffScreen() {
     this.visible = true;
     gsap.to(this, {
-      y: this.parent.height - this.height * 2.5,
+      y: this.parent.height - this.height * 1.5,
       duration: 1,
     });
   }

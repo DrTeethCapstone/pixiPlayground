@@ -31,6 +31,7 @@ export class Word extends PIXI.Text {
 
     // this.updatePosition();
   }
+  updateIndex() {}
 
   updatePosition() {
     gsap.to(this, { y: -this.height * this.index, duration: 1 });
