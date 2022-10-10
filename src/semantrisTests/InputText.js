@@ -126,7 +126,6 @@ export class InputText extends PIXI.Text {
 
     const embeddingsFromWords = await this.model.embed(words);
     const embeddingsFromTarget = await this.model.embed(target);
-    console.log(1)
     //TODO: THIS DOESN'T RETURN THE SAME INFORMATION THAT ON GOOGLE'S REF
     for (let i = 0; i < target.length; i++) {
       for (let j = i; j < words.length; j++) {
@@ -145,7 +144,6 @@ export class InputText extends PIXI.Text {
         wordObjects[j].similarityScore = score[0];
       }
     }
-    console.log(2)
     
     this.assignSimilarityIndex(wordObjects);
     tf.engine().endScope();
