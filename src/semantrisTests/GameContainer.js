@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+//ANIMATION PLUGINS
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 gsap.registerPlugin(PixiPlugin);
@@ -15,6 +16,7 @@ export class GameContainer extends PIXI.Container {
     bg.width = (window.innerWidth * 50) / 100;
     bg.height = window.innerHeight;
     this.addChild(bg);
+
     //GAME CONATINER ANCHOR POINT IS CENTER - TOP
     bg.anchor.set(0.5, 0);
     // this.visible = false;
@@ -28,6 +30,7 @@ export class GameContainer extends PIXI.Container {
     gsap.to(this, {
       alpha: 1,
       duration: 1,
+      // duration: 3,
     });
   }
 }

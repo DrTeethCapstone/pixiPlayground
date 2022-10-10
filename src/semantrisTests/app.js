@@ -5,12 +5,14 @@ import { WordsContainer } from "./WordsContainer";
 import { InputText } from "./InputText";
 import { Timer } from "./Timer";
 import { Word } from "./Words";
+import { GameMenu } from "./Menu";
+import { Score } from "./Score";
+import { PreviousWord } from "./PreviousWord";
 
 //ANIMATION PLUGINS
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 gsap.registerPlugin(PixiPlugin);
-//GAME STORE AT APP LEVEL
 
 export class Sketch {
   //CREATE AND ADD A NEW INSTANCE OF THE CANVAS WITH STYLES
@@ -25,7 +27,10 @@ export class Sketch {
     document.body.appendChild(this.app.view);
 
     //TODO: ADD SCORE ACCESSIBILITY TO SKETCH LEVEL
-    this.score = 0;
+    // this.score = new Score();
+
+    //TESTING GAME MENU
+    // this.menu = new GameMenu(this.app.stage);
 
     //CREATE GAME CONTAINER AND STORE ALL GAME CONTAINERS/ELEMENTS INSIDE
     this.gameContainer = new GameContainer(this.app.stage);
@@ -35,6 +40,7 @@ export class Sketch {
 
     //WHEN THIS COMPONENT IS CREATED, THE ELEMENT WILL ANIMATE IN
     this.animateElementsIn();
+
     //TIME STATE
     // const timer = new Timer(this.app.stage);
     this.time = 0;

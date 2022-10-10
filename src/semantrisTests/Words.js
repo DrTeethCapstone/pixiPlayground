@@ -38,24 +38,29 @@ export class Word extends PIXI.Text {
     const tempText = `(${originalText.slice(0, num)})${originalText.slice(
       num
     )}`;
+
     this.text = tempText;
+
     setTimeout(() => {
       this.text = originalText;
       this.style.fill = 0xffffff;
     }, 1500);
+
     gsap.to(this.style, { fill: "red", duration: 1 });
   }
 
   updatePosition() {
-    gsap.to(this, { y: -this.height * this.index, duration: 1 });
+    if (this.index > -1) {
+      gsap.to(this, { y: -this.height * this.index, duration: 1 });
+    }
   }
 
   removeWord() {
+    //TODO: ANIMATE THINGS OFF THE SCREEN, REINDEX THE CHILDREN, ANIMATE NEW POSITIONS, REMOVE THINGS OFF SCREEN
     gsap.to(this, { x: -100, duration: 4 });
     this.parent.removeChild(this);
   }
 
-  //METHOD TO UPDATE WORDS
   updateWord(word) {
     this.text = word;
   }

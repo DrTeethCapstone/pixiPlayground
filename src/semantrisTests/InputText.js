@@ -26,7 +26,7 @@ export class InputText extends PIXI.Text {
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.tint = 0xffffff;
     bg.anchor.set(0.5);
-    bg.height = this.height + 10;
+    bg.height = 50;
     bg.width = 300;
 
     this.inputContainer = new PIXI.Container();
@@ -89,6 +89,7 @@ export class InputText extends PIXI.Text {
       if (this.validateWordInput(validation)) {
         this.speakToTensor([this.userGuess], tensorWords, words);
       }
+
       this.userGuess = "";
       me.text = "";
     } else if (e.key === "Backspace") {
@@ -130,8 +131,15 @@ export class InputText extends PIXI.Text {
           .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
           .dataSync();
         // console.log(`${words[j]} -- ${target}`, score);
-        this.currentSimilarityScores.push({ word: words[j], score: score[0] });
+
+        //ADDING=THE SIMILARITY SCORE TO EACH WORD OBJECT
         wordObjects[j].similarityScore = score[0];
+
+        // embeddingsFromTarget.dispose();
+        // LOOKING INTO MEMORY MANAGEMENT, CURRENTLY CREATING TENSORS STORING INFINITY
+        wordI.dispose();
+        wordJ.dispose();
+        console.log(tf.memory().numTensors);
       }
     }
     this.assignSimilarityIndex(wordObjects);
