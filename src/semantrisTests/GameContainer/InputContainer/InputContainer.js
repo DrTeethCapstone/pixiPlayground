@@ -11,7 +11,7 @@ export class InputContainer extends PIXI.Container {
   constructor(parent) {
     super();
     this.parent = parent;
-    this.multiplier = 3;
+    this.multiplier = 0;
 
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.anchor.set(0.5, 1);
@@ -47,8 +47,8 @@ export class InputContainer extends PIXI.Container {
     MCBackground.tint = 0xececec;
     MCBackground.width = bg.width;
     MCBackground.height = bg.height / 4;
-    this.multiplierContainer.position.y = -MCBackground.height * 4.5;
-    this.multiplierContainer.position.x = -PGCBackground.width / 2;
+    this.multiplierContainer.position.y = MCBackground.height * -4.5;
+    this.multiplierContainer.position.x = PGCBackground.width / -2;
     this.multiplierContainer.addChild(MCBackground);
 
     this.addChild(this.multiplierContainer);
@@ -56,13 +56,24 @@ export class InputContainer extends PIXI.Container {
     if (this.parent) {
       this.parent.addChild(this);
     }
-    this.updateMultiplier();
+    // this.updateMultiplier();
   }
 
   //UPDATES THE AMOUNT OF MULTIPLIERS DISPLAYING
-  updateMultiplier() {
-    for (let i = 0; i < this.multiplier; i++) {
-      new Multiplier(this.multiplierContainer);
+  updateMultiplier(boolean) {
+    if (boolean) {
+      this.multiplier++;
+      if (this.multiplier <= 4) {
+        new Multiplier(this.multiplierContainer);
+      }
+    } else {
+      if (this.multiplierContainer.children.length > 1 && this.multiplier > 0) {
+        const child =
+          this.multiplierContainer.children[
+            this.multiplierContainer.children.length - 1
+          ];
+        this.multiplierContainer.removeChild(child);
+      }
     }
   }
 

@@ -26,9 +26,6 @@ export class WordsContainer extends PIXI.Container {
       const word = new Word(randomWords(), this);
       word.updatePosition();
     }
-    // target
-    //   ? new Word(randomWords(), this, true)
-    //   : new Word(randomWords(), this);
   }
 
   //TAKE THE ARRAY OF RANDOM WORDS AND CREATE NEW WORD OBJECTS AND UPDATE THEIR POSIITON
@@ -60,9 +57,9 @@ export class WordsContainer extends PIXI.Container {
           this.removeChild(this.children[0]);
         }
         this.children.forEach((word, i) => (word.index = i));
-
-        //after WORDS ARE REMOVED, ADD TO SCORE AND INCREASE MULTIPLIER
-        console.log("do the things", prevGuessObject);
+        prevGuessObject.parent.parent.updateMultiplier(true);
+      } else {
+        prevGuessObject.parent.parent.updateMultiplier(false);
       }
     }
     this.dropChildrenPosition();

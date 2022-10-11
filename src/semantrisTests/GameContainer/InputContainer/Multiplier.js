@@ -24,7 +24,7 @@ export class Multiplier extends PIXI.Graphics {
     }
   }
   positionBasedOnSiblings() {
-    console.log(this.parent.children.slice(1));
     this.position.x = this.width * (this.parent.children.slice(1).length - 1);
   }
+  removeLast() {}
 }

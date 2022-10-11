@@ -137,9 +137,9 @@ export class InputText extends PIXI.Text {
 
         // embeddingsFromTarget.dispose();
         // LOOKING INTO MEMORY MANAGEMENT, CURRENTLY CREATING TENSORS STORING INFINITY
-        wordI.dispose();
-        wordJ.dispose();
-        console.log(tf.memory().numTensors);
+        // wordI.dispose();
+        // wordJ.dispose();
+        // console.log(tf.memory().numTensors);
       }
     }
     this.assignSimilarityIndex(wordObjects, guessObj);
