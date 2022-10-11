@@ -9,7 +9,7 @@ export class ScoreContainer extends PIXI.Container {
   constructor(parent = null) {
     super();
     this.parent = parent;
-    this.score = 0;
+    this.userScore = 0;
 
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.alpha = 0;
@@ -22,7 +22,6 @@ export class ScoreContainer extends PIXI.Container {
     const TCBackground = new PIXI.Sprite.from(img);
     TCBackground.alpha = 0.3;
     TCBackground.tint = 0xa30b0b;
-    console.log(TCBackground);
     TCBackground.scale.set(0.2);
     TCBackground.width = bg.width;
     TCBackground.height = bg.height * 0.25;

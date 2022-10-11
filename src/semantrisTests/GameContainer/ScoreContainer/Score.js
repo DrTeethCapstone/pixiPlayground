@@ -6,21 +6,27 @@ export class Score extends PIXI.Text {
     super("0", {
       fontFamily: "Arial",
       fontSize: 128,
-      fill: 0xadd3e6,
+      fill: 0x000000,
       align: "center",
     });
 
+    this.alpha = 0.5;
     this.parent = parent;
 
     if (this.parent) {
       this.parent.addChild(this);
-      this.position.x = this.parent.width / 2 - this.width * 0.5;
+      this.updatePosition();
       this.position.y = this.parent.height / 3;
     }
   }
 
+  updatePosition() {
+    this.position.x = this.parent.width / 2 - this.width / 2;
+  }
+
   updateScore(val) {
-    this.score += val;
-    this.text = this.score;
+    this.parent.parent.userScore += val;
+    this.text = this.parent.parent.userScore;
+    this.updatePosition();
   }
 }

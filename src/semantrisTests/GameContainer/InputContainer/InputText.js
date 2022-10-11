@@ -65,7 +65,7 @@ export class InputText extends PIXI.Text {
   updateInputText(e, me) {
     if (e.key === "Enter") {
       //ARRAY OF WORD OBJECTS
-      this.wordsContainer = this.parent.parent.parent.children[2];
+      this.wordsContainer = this.parent.parent.parent.children[3];
       let words = this.wordsContainer.children;
       //TARGET WORD OBJECT
       let [targetWord] = words.filter((word) => word.isTarget);
@@ -162,6 +162,6 @@ export class InputText extends PIXI.Text {
   //PRETRAINED MODEL
   async setupModel() {
     this.model = await use.load();
-    console.log("model loaded");
+    console.log("Tensorflow model was loaded.");
   }
 }

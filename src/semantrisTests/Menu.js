@@ -14,7 +14,7 @@ export class GameMenu extends PIXI.Container {
     border.lineStyle(4, 0x0aea5b);
     border.drawRect(0, 0, window.innerWidth, window.innerHeight);
     this.addChild(border);
-    console.log(border);
+    // console.log(border);
 
     const boxButton = new PIXI.Graphics();
     boxButton.lineStyle(2, 0x0aea5b);

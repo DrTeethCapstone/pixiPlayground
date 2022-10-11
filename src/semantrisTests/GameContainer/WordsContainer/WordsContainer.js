@@ -52,10 +52,13 @@ export class WordsContainer extends PIXI.Container {
 
   checkTargetPosition(prevGuessObject) {
     if (this.target) {
+      //CHECK TO SEE IF TARGET WAS REPOSITIONED TO TOP FOUR
       if (this.target.index <= 3) {
         for (let i = 0; i < 4; i++) {
+          //REMOVE THE TOP FOUR CHILDREN
           this.removeChild(this.children[0]);
         }
+        //UPDATE THE REMAINING CHILDREN INDEXES
         this.children.forEach((word, i) => (word.index = i));
         prevGuessObject.parent.parent.updateMultiplier(true);
       } else {

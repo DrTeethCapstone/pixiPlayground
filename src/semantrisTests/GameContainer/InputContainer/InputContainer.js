@@ -11,7 +11,7 @@ export class InputContainer extends PIXI.Container {
   constructor(parent) {
     super();
     this.parent = parent;
-    this.multiplier = 0;
+    this.multiplier = 1;
 
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.anchor.set(0.5, 1);
@@ -63,18 +63,21 @@ export class InputContainer extends PIXI.Container {
   //UPDATES THE AMOUNT OF MULTIPLIERS DISPLAYING
   //TODO: DOESN'T WORK ALL THE TIME
   updateMultiplier(boolean) {
+    const children = this.multiplierContainer.children.slice(1);
+    const scoreObject = this.parent.children[2].children[2].children[1];
     if (boolean) {
-      this.multiplier++;
+      const baseScore = 25;
+      scoreObject.updateScore(baseScore * this.multiplier);
       if (this.multiplier <= 4) {
-        new Multiplier(this.multiplierContainer);
+        this.multiplier++;
+        if (children.length < this.multiplier) {
+          new Multiplier(this.multiplierContainer);
+        }
       }
     } else {
-      if (this.multiplierContainer.children.length > 1 && this.multiplier > 0) {
-        const child =
-          this.multiplierContainer.children[
-            this.multiplierContainer.children.length - 1
-          ];
-        this.multiplierContainer.removeChild(child);
+      if (this.multiplier > 1) {
+        this.multiplier--;
+        this.multiplierContainer.removeChild(children[children.length - 1]);
       }
     }
   }

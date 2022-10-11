@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import { InputContainer } from "./InputContainer/InputContainer";
 import { WordsContainer } from "./WordsContainer/WordsContainer";
 import { ScoreContainer } from "./ScoreContainer/ScoreContainer";
+
 //ANIMATION PLUGINS
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
@@ -21,10 +22,10 @@ export class GameContainer extends PIXI.Container {
     this.addChild(bg);
 
     this.inputContainer = new InputContainer(this);
+    this.scoreContainer = new ScoreContainer(this);
     this.wordsContainer = new WordsContainer(this);
     this.wordsContainer.setupFirstChildren();
     this.wordsContainer.children.forEach((word) => word.updatePosition());
-    this.scoreContainer = new ScoreContainer(this);
 
     if (this.stage) {
       this.stage.addChild(this);
