@@ -117,7 +117,13 @@ export class InputText extends PIXI.Text {
 
   //USER INTERACTION WITH TENSOR
   async speakToTensor(target, words, wordObjects, guessObj) {
+    console.log("start", tf.memory().numTensors);
+    // TO FIX MEMORY LEAKS, WE NEED TO MANUALLY DEFINE OUR SCOPE
+    // USE TF.ENGINE FOR ASYNC FUNCTIONS, TF.TIDY FOR OTHERS
+    tf.engine().startScope();
+
     //TODO: MAYBE TRY TO EMBED SOMEWHERE ELSE SOONER BEFORE TARGET IS AVAILABLE
+
     const embeddingsFromWords = await this.model.embed(words);
     const embeddingsFromTarget = await this.model.embed(target);
     //TODO: THIS DOESN'T RETURN THE SAME INFORMATION THAT ON GOOGLE'S REF
@@ -127,22 +133,21 @@ export class InputText extends PIXI.Text {
         const wordJ = tf.slice(embeddingsFromWords, [j, 0], [1]);
         const wordITranspose = false;
         const wordJTranspose = true;
+
         const score = tf
           .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
           .dataSync();
+
         // console.log(`${words[j]} -- ${target}`, score);
 
         //ADDING=THE SIMILARITY SCORE TO EACH WORD OBJECT
         wordObjects[j].similarityScore = score[0];
-
-        // embeddingsFromTarget.dispose();
-        // LOOKING INTO MEMORY MANAGEMENT, CURRENTLY CREATING TENSORS STORING INFINITY
-        // wordI.dispose();
-        // wordJ.dispose();
-        // console.log(tf.memory().numTensors);
       }
     }
+
     this.assignSimilarityIndex(wordObjects, guessObj);
+    tf.engine().endScope();
+    console.log("end", tf.memory().numTensors);
   }
 
   //AFTER RUNNING TENSOR, UPDATE EACH WORD'S INDEX STATE
