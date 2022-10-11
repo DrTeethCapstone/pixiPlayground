@@ -29,6 +29,7 @@ export class InputContainer extends PIXI.Container {
     this.addChild(interactiveContainer);
 
     this.interaction = new InputText(interactiveContainer);
+    this.interaction.setupModel();
 
     const previousGuessContianer = new PIXI.Container();
     const PGCBackground = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -55,11 +56,12 @@ export class InputContainer extends PIXI.Container {
 
     if (this.parent) {
       this.parent.addChild(this);
+      this.position.y = this.parent.height - this.height;
     }
-    // this.updateMultiplier();
   }
 
   //UPDATES THE AMOUNT OF MULTIPLIERS DISPLAYING
+  //TODO: DOESN'T WORK ALL THE TIME
   updateMultiplier(boolean) {
     if (boolean) {
       this.multiplier++;
@@ -82,7 +84,6 @@ export class InputContainer extends PIXI.Container {
     gsap.to(this, {
       y: this.parent.height - this.height * 1.5,
       duration: 1,
-      // duration: 3,
     });
   }
 

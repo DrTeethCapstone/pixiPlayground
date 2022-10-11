@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { GameContainer } from "./GameContainer/GameContainer";
-import { InputContainer } from "./GameContainer/InputContainer/InputContainer.js";
+import { ScoreContainer } from "./GameContainer/ScoreContainer/ScoreContainer";
 
 //ANIMATION PLUGINS
 import { gsap } from "gsap";
@@ -19,10 +19,8 @@ export class Sketch {
     });
     document.body.appendChild(this.app.view);
 
-    // const test = new InputContainer(this.app.stage);
-    // test.position.set(window.innerWidth / 2, window.innerHeight);
-    //TODO: ADD SCORE ACCESSIBILITY TO SKETCH LEVEL
-    // this.score = new Score();
+    // this.scoreContainer = new ScoreContainer(this.app.stage);
+    // this.scoreContainer.position.set(this.width / 2, this.height / 2);
 
     //TESTING GAME MENU
     // this.menu = new GameMenu(this.app.stage);
@@ -30,12 +28,6 @@ export class Sketch {
     //CREATE GAME CONTAINER AND STORE ALL GAME CONTAINERS/ELEMENTS INSIDE
     this.gameContainer = new GameContainer(this.app.stage);
     this.gameContainer.position.set(this.width / 2, 0);
-    // this.inputContainer = new InputContainer(this.gameContainer);
-    // this.inputContainer.input.setupModel();
-    // this.wordsContainer = new WordsContainer(this.gameContainer);
-
-    //WHEN THIS COMPONENT IS CREATED, THE ELEMENT WILL ANIMATE IN
-    // this.animateElementsIn();
 
     //TIME STATE
     // const timer = new Timer(this.app.stage);
@@ -43,12 +35,6 @@ export class Sketch {
 
     //THIS CURRENTLY INITIATES THE GAME LOOP
     this.render();
-  }
-  animateElementsIn() {
-    this.gameContainer.animateIn();
-    this.inputContainer.fromOffScreen();
-    this.wordsContainer.setupFirstChildren();
-    this.wordsContainer.children.forEach((word) => word.updatePosition());
   }
 
   //CREATE USER INPUT FIELD AND ADD IT TO WORDS CONTAINER < CAN BE SEPARATED

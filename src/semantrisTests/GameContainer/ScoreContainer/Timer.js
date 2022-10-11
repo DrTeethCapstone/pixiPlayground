@@ -5,7 +5,7 @@ import img from "../semantrisTests/img/caution.jpg";
 export class Timer extends PIXI.Sprite {
   constructor(parent = null) {
     super(PIXI.Texture.WHITE);
-    this.texture = PIXI.Texture.from(img);
+    // this.texture = PIXI.Texture.from(img);
     this.scale.set(0.2);
     this.alpha = 0.2;
     this.parent = parent;

@@ -8,6 +8,7 @@ export class Multiplier extends PIXI.Graphics {
   constructor(parent) {
     super();
     this.parent = parent;
+
     if (this.parent) {
       this.parent.addChild(this);
       this.lineStyle(1, 0xececec);
@@ -19,12 +20,11 @@ export class Multiplier extends PIXI.Graphics {
       this.addChild(this.graphic);
       this.position.y = this.height / 2;
       this.position.x = 0;
-      // console.log(this.parent.children.slice(1));
       this.positionBasedOnSiblings();
     }
   }
+
   positionBasedOnSiblings() {
     this.position.x = this.width * (this.parent.children.slice(1).length - 1);
   }
-  removeLast() {}
 }
