@@ -5,7 +5,7 @@ import * as tf from "@tensorflow/tfjs";
 import * as use from "@tensorflow-models/universal-sentence-encoder";
 import * as randomWords from "random-words";
 import { Word } from "./WordsContainer/Words";
-
+import { GameMenu } from "../GameMenu";
 //GAME ELEMENTS
 import { InputContainer } from "./InputContainer/InputContainer";
 import { WordsContainer } from "./WordsContainer/WordsContainer";
@@ -27,16 +27,18 @@ export class GameContainer extends PIXI.Container {
 
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.tint = 0xc6e2ff;
+    bg.alpha = 0;
     bg.width = (window.innerWidth * 50) / 100;
     bg.height = window.innerHeight;
     bg.anchor.set(0.5, 0);
     this.addChild(bg);
 
     this.inputContainer = new InputContainer(this);
-    this.scoreContainer = new ScoreContainer(this);
+    // this.scoreContainer = new ScoreContainer(this);
     this.wordsContainer = new WordsContainer(this);
-    this.wordsContainer.setupFirstChildren();
-    this.wordsContainer.children.forEach((word) => word.updatePosition());
+    // this.wordsContainer.setupFirstChildren();
+    // this.wordsContainer.prepareEmbeddings();
+    // this.wordsContainer.children.forEach((word) => word.updatePosition());
 
     if (this.stage) {
       this.stage.addChild(this);

@@ -19,13 +19,11 @@ export class InputText extends PIXI.Text {
     this.enabled = false;
 
     //DON'T HAVE ACCESS TO THESE VALUES UNTIL SPECIFIC METHODS ARE CALLED
-    // this.model = null;
-    // this.wordsContainer = null;
+    this.wordsContainer = null;
 
     if (parent) {
       const container = new PIXI.Container();
       const containerBG = new PIXI.Sprite(PIXI.Texture.WHITE);
-      // containerBG.tint = 0xf0e000;
       containerBG.width = this.parent.width;
       containerBG.height = this.parent.height / 2;
       container.position.y = -containerBG.height;
@@ -43,8 +41,6 @@ export class InputText extends PIXI.Text {
       this.style.fill = 0x00ff00;
       this.setupKeyboardListener();
     });
-
-    this.setupModel();
   }
 
   setupKeyboardListener() {
@@ -78,13 +74,10 @@ export class InputText extends PIXI.Text {
   //KEYBOARD
   updateInputText(e, me) {
     if (e.key === "Enter") {
-      //ARRAY OF WORD OBJECTS
-      this.wordsContainer = this.parent.parent.parent.children[3];
+      this.wordsContainer = this.parent.parent.parent.children[2];
       let words = this.wordsContainer.children;
       //TARGET WORD OBJECT
       let [targetWord] = words.filter((word) => word.isTarget);
-      //ARRAY OF WORDS -- IN STRINGS
-      const tensorWords = words.map((word) => word.text);
 
       const validation = {
         targetString: targetWord.text,
@@ -94,12 +87,7 @@ export class InputText extends PIXI.Text {
       const prevWordObject = this.parent.parent.children[2].children[1];
 
       if (this.validateWordInput(validation)) {
-        this.speakToTensor(
-          [this.userGuess],
-          tensorWords,
-          words,
-          prevWordObject
-        );
+        this.speakToTensor([this.userGuess], words, prevWordObject);
       }
 
       prevWordObject.updateWord(this.userGuess);
@@ -123,42 +111,37 @@ export class InputText extends PIXI.Text {
     return char.length === 1 && char.match(/[a-z]/i);
   }
 
-  //TODO: MAYBE STORE THIS SOMEWHERE BEFORE USING SPEAK TO TENSOR
-  async createTensorWordList(words) {
-    await this.model.embed(words);
-    return tf.slice(embeddingsFromWords, [j, 0], [1]);
-  }
-
   //USER INTERACTION WITH TENSOR
-  async speakToTensor(target, words, wordObjects, guessObj) {
+  async speakToTensor(target, wordObjects, guessObj) {
     console.log("start", tf.memory().numTensors);
-    // TO FIX MEMORY LEAKS, WE NEED TO MANUALLY DEFINE OUR SCOPE
-    // USE TF.ENGINE FOR ASYNC FUNCTIONS, TF.TIDY FOR OTHERS
     tf.engine().startScope();
 
-    //TODO: MAYBE TRY TO EMBED SOMEWHERE ELSE SOONER BEFORE TARGET IS AVAILABLE
+    console.log("Start", new Date());
+    const embeddingsFromTarget = await this.wordsContainer.tensorModel.embed(
+      target
+    );
+    console.log("End", new Date());
 
-    const embeddingsFromWords = await this.model.embed(words);
-    const embeddingsFromTarget = await this.model.embed(target);
-    //TODO: THIS DOESN'T RETURN THE SAME INFORMATION THAT ON GOOGLE'S REF
     for (let i = 0; i < target.length; i++) {
-      for (let j = i; j < words.length; j++) {
+      for (let j = i; j < this.wordsContainer.children.length; j++) {
         const wordI = tf.slice(embeddingsFromTarget, [i, 0], [1]);
-        const wordJ = tf.slice(embeddingsFromWords, [j, 0], [1]);
+        const wordJ = tf.slice(this.wordsContainer.wordEmbeddings, [j, 0], [1]);
         const wordITranspose = false;
         const wordJTranspose = true;
 
         const score = tf
           .matMul(wordI, wordJ, wordITranspose, wordJTranspose)
           .dataSync();
-
-        // console.log(`${words[j]} -- ${target}`, score);
-
-        //ADDING=THE SIMILARITY SCORE TO EACH WORD OBJECT
+        console.log(
+          this.wordsContainer.children[j],
+          `${this.wordsContainer.children[j].text} -- ${target}`,
+          score
+        );
+        //ADDING THE SIMILARITY SCORE TO EACH WORD OBJECT
         wordObjects[j].similarityScore = score[0];
       }
     }
-
+    console.log(wordObjects);
     this.assignSimilarityIndex(wordObjects, guessObj);
     tf.engine().endScope();
     console.log("end", tf.memory().numTensors);
@@ -176,11 +159,5 @@ export class InputText extends PIXI.Text {
     });
     //REMOVE TOP 4 WORDS IF TARGET HAS AN INDEX OF 3 OR LESS
     this.wordsContainer.checkTargetPosition(guessObj);
-  }
-
-  //PRETRAINED MODEL
-  async setupModel() {
-    this.model = await use.load();
-    console.log("Tensorflow model was loaded.");
   }
 }

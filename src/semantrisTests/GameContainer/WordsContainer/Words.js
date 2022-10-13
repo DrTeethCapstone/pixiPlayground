@@ -12,14 +12,14 @@ export class Word extends PIXI.Text {
     super(word, {
       fontFamily: "Arial",
       fontSize: 24,
-      fill: 0x5dade2,
+      fill: 0xc3b1e1,
       align: "center",
     });
 
     this.parent = parent;
     this.anchor.set(0.5, 1);
     this.isWord = true;
-    this.similarityScores = [];
+    this.similarityScores = 0;
 
     if (isTarget) {
       this.isTarget = isTarget;
@@ -31,6 +31,13 @@ export class Word extends PIXI.Text {
       this.parent.addChild(this);
       this.position.y = -this.parent.getGlobalPosition().y;
     }
+  }
+
+  //HELPER FUNCTION TO ASSIGN
+  updateParent() {
+    this.index = this.parent.children.length;
+    // this.parent.addChild(this);
+    this.position.y = -this.parent.getGlobalPosition().y;
   }
 
   //HIGHTLIGHTS WORD IN RED IF GUESS WASN'T VALID

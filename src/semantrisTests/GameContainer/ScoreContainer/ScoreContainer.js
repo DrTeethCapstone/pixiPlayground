@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
-import img from "../../img/caution.jpg";
 import { Score } from "./Score";
-
+import test from "../../img/something.webm";
+// console.log(test);
 //ANIMATION PLUGIN
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
@@ -20,6 +20,13 @@ export class ScoreContainer extends PIXI.Container {
     bg.anchor.set(0.5, 1);
     this.addChild(bg);
 
+    // const testing = new PIXI.Texture.from(test);
+    // console.log(testing);
+    // const sprite = new PIXI.Sprite(testing);
+    // this.addChild(sprite);
+    // const videoControler = sprite.texture.baseTexture.source;
+    // videoControler.play;
+    // console.log(testing);
     // this.timerContainer = new PIXI.Container();
     // const TCBackground = new PIXI.Sprite.from(img);
     // TCBackground.alpha = 0.3;

@@ -48,7 +48,7 @@ export class InputContainer extends PIXI.Container {
     //ADD MULITIPLIER
     if (boolean) {
       const baseScore = 25;
-      scoreObject.updateScore(baseScore * this.multiplier);
+      // scoreObject.updateScore(baseScore * this.multiplier);
       if (this.multiplier <= 4) {
         this.multiplier++;
         if (children.length < this.multiplier) {

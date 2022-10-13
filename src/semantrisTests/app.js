@@ -12,7 +12,7 @@ export class Sketch {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.app = new PIXI.Application({
-      backgroundColor: 0x000000,
+      backgroundAlpha: 0,
       resolution: window.devicePixelRatio || 1,
       resizeTo: window,
     });
@@ -20,6 +20,7 @@ export class Sketch {
     document.body.appendChild(this.app.view);
 
     //CREATE GAME CONTAINER AND STORE ALL GAME CONTAINERS/ELEMENTS INSIDE
+    this.background = new GameMenu(this.app.stage);
     this.gameContainer = new GameContainer(this.app.stage);
     this.gameContainer.position.set(this.width / 2, 0);
 
@@ -28,15 +29,16 @@ export class Sketch {
     // const test = new GameMenu(this.app.stage);
 
     //THIS CURRENTLY INITIATES THE GAME LOOP
-    // this.render();
+    this.render();
   }
   //RUNS GAME LOOP AND TRIGGERS THINGS THAT SHOULD RENDER ON EACH FRAME
   render() {
     this.app.ticker.add((delta) => {
-      const wordsContainer = this.gameContainer.children[3];
+      // const wordsContainer = this.gameContainer.children[3];
+      // const wordsContainer = this.gameContainer.children[2];
       this.time += 0.05;
       if (Math.floor(this.time) === 10) {
-        // wordsContainer.addWord();
+        // wordsContainer.addWord(false);
         this.time = 0;
       }
       //   console.log("gameover!!!");
