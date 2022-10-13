@@ -12,7 +12,16 @@ export class PreviousWord extends PIXI.Text {
     this.parent = parent;
 
     if (this.parent) {
-      this.parent.addChild(this);
+      const container = new PIXI.Container();
+      const containerBG = new PIXI.Sprite(PIXI.Texture.WHITE);
+      containerBG.tint = 0xececec;
+      containerBG.width = this.parent.width;
+      containerBG.height = this.parent.height / 2;
+      container.position.y = -containerBG.height * 2;
+      container.position.x = -containerBG.width / 2;
+      container.addChild(containerBG);
+      this.parent.addChild(container);
+      container.addChild(this);
       this.position.x = this.parent.width / 2;
       this.position.y = this.parent.height - this.parent.height / 4;
       this.anchor.set(0.5, 1);
@@ -20,6 +29,10 @@ export class PreviousWord extends PIXI.Text {
   }
 
   updateWord(word) {
-    this.text = word;
+    if (!word.length) {
+      this.text = "Please Enter a Valid Guess";
+    } else {
+      this.text = word;
+    }
   }
 }

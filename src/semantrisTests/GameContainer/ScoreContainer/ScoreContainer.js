@@ -1,6 +1,8 @@
 import * as PIXI from "pixi.js";
 import img from "../../img/caution.jpg";
 import { Score } from "./Score";
+
+//ANIMATION PLUGIN
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 gsap.registerPlugin(PixiPlugin);
@@ -18,16 +20,16 @@ export class ScoreContainer extends PIXI.Container {
     bg.anchor.set(0.5, 1);
     this.addChild(bg);
 
-    this.timerContainer = new PIXI.Container();
-    const TCBackground = new PIXI.Sprite.from(img);
-    TCBackground.alpha = 0.3;
-    TCBackground.tint = 0xa30b0b;
-    TCBackground.scale.set(0.2);
-    TCBackground.width = bg.width;
-    TCBackground.height = bg.height * 0.25;
-    this.timerContainer.position.x = TCBackground.width / -2;
-    this.timerContainer.position.y = -this.height;
-    this.timerContainer.addChild(TCBackground);
+    // this.timerContainer = new PIXI.Container();
+    // const TCBackground = new PIXI.Sprite.from(img);
+    // TCBackground.alpha = 0.3;
+    // TCBackground.tint = 0xa30b0b;
+    // TCBackground.scale.set(0.2);
+    // TCBackground.width = bg.width;
+    // TCBackground.height = bg.height * 0.25;
+    // this.timerContainer.position.x = TCBackground.width / -2;
+    // this.timerContainer.position.y = -this.height;
+    // this.timerContainer.addChild(TCBackground);
 
     this.userScoreContainer = new PIXI.Container();
     const USCBackground = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -41,7 +43,7 @@ export class ScoreContainer extends PIXI.Container {
     this.score = new Score(this.userScoreContainer);
     this.userScoreContainer.addChild(this.score);
 
-    this.addChild(this.timerContainer);
+    // this.addChild(this.timerContainer);
     this.addChild(this.userScoreContainer);
 
     if (this.parent) {

@@ -19,13 +19,22 @@ export class InputText extends PIXI.Text {
     this.enabled = false;
 
     //DON'T HAVE ACCESS TO THESE VALUES UNTIL SPECIFIC METHODS ARE CALLED
-    this.model = null;
-    this.wordsContainer = null;
+    // this.model = null;
+    // this.wordsContainer = null;
 
     if (parent) {
-      this.parent.addChild(this);
-      this.position.x = this.parent.width / 2;
-      this.position.y = this.parent.height / 2;
+      const container = new PIXI.Container();
+      const containerBG = new PIXI.Sprite(PIXI.Texture.WHITE);
+      // containerBG.tint = 0xf0e000;
+      containerBG.width = this.parent.width;
+      containerBG.height = this.parent.height / 2;
+      container.position.y = -containerBG.height;
+      container.position.x = -containerBG.width / 2;
+      container.addChild(containerBG);
+      this.parent.addChild(container);
+      container.addChild(this);
+      this.position.x = containerBG.width / 2;
+      this.position.y = containerBG.height - this.height;
       this.anchor.set(0.5);
     }
 
@@ -34,6 +43,8 @@ export class InputText extends PIXI.Text {
       this.style.fill = 0x00ff00;
       this.setupKeyboardListener();
     });
+
+    this.setupModel();
   }
 
   setupKeyboardListener() {
@@ -47,6 +58,9 @@ export class InputText extends PIXI.Text {
 
   //VALIDATION FOR INPUT WORD BEFORE SENDING WORD TO TENSOR
   validateWordInput({ targetString, inputString, target }) {
+    if (!inputString.length) {
+      return false;
+    }
     if (targetString.length <= 3 && inputString.length >= 3) {
       if (targetString.slice(0, 3) === inputString.slice(0, 3)) {
         target.invalidGuess(3);

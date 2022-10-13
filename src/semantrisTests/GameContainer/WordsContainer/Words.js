@@ -19,6 +19,7 @@ export class Word extends PIXI.Text {
     this.parent = parent;
     this.anchor.set(0.5, 1);
     this.isWord = true;
+    this.similarityScores = [];
 
     if (isTarget) {
       this.isTarget = isTarget;

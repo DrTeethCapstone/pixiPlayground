@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import { GameContainer } from "./GameContainer/GameContainer";
-import { ScoreContainer } from "./GameContainer/ScoreContainer/ScoreContainer";
-
+import { GameMenu } from "./GameMenu";
 //ANIMATION PLUGINS
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
@@ -17,46 +16,31 @@ export class Sketch {
       resolution: window.devicePixelRatio || 1,
       resizeTo: window,
     });
+
     document.body.appendChild(this.app.view);
-
-    // this.scoreContainer = new ScoreContainer(this.app.stage);
-    // this.scoreContainer.position.set(this.width / 2, this.height / 2);
-
-    //TESTING GAME MENU
-    // this.menu = new GameMenu(this.app.stage);
 
     //CREATE GAME CONTAINER AND STORE ALL GAME CONTAINERS/ELEMENTS INSIDE
     this.gameContainer = new GameContainer(this.app.stage);
     this.gameContainer.position.set(this.width / 2, 0);
 
-    //TIME STATE
-    // const timer = new Timer(this.app.stage);
     this.time = 0;
 
+    // const test = new GameMenu(this.app.stage);
+
     //THIS CURRENTLY INITIATES THE GAME LOOP
-    this.render();
+    // this.render();
   }
-
-  //CREATE USER INPUT FIELD AND ADD IT TO WORDS CONTAINER < CAN BE SEPARATED
-  setupWordsContainer() {
-    new InputText(this.inputContainer, this.app.stage);
-  }
-
   //RUNS GAME LOOP AND TRIGGERS THINGS THAT SHOULD RENDER ON EACH FRAME
   render() {
     this.app.ticker.add((delta) => {
+      const wordsContainer = this.gameContainer.children[3];
       this.time += 0.05;
-
       if (Math.floor(this.time) === 10) {
-        // this.wordsContainer.addWord();
+        // wordsContainer.addWord();
         this.time = 0;
       }
-
-      // if (this.wordsContainer.positionChildren()) {
       //   console.log("gameover!!!");
-      //   console.log(this.wordsContainer);
       //   this.app.stop();
-      // }
     });
   }
 }

@@ -15,33 +15,13 @@ export class InputContainer extends PIXI.Container {
 
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
     bg.anchor.set(0.5, 1);
-    bg.height = 150;
+    bg.height = 100;
     bg.width = this.parent.width;
     this.addChild(bg);
 
-    const interactiveContainer = new PIXI.Container();
-    const ICBackground = new PIXI.Sprite(PIXI.Texture.WHITE);
-    ICBackground.width = bg.width;
-    ICBackground.height = bg.height / 2;
-    interactiveContainer.position.y = -ICBackground.height;
-    interactiveContainer.position.x = -ICBackground.width / 2;
-    interactiveContainer.addChild(ICBackground);
-    this.addChild(interactiveContainer);
+    this.interaction = new InputText(this);
 
-    this.interaction = new InputText(interactiveContainer);
-    this.interaction.setupModel();
-
-    const previousGuessContianer = new PIXI.Container();
-    const PGCBackground = new PIXI.Sprite(PIXI.Texture.WHITE);
-    PGCBackground.tint = 0xececec;
-    PGCBackground.width = bg.width;
-    PGCBackground.height = bg.height / 2;
-    previousGuessContianer.position.y = -PGCBackground.height * 2;
-    previousGuessContianer.position.x = -PGCBackground.width / 2;
-    previousGuessContianer.addChild(PGCBackground);
-    this.addChild(previousGuessContianer);
-
-    this.prevGuess = new PreviousWord(previousGuessContianer);
+    this.prevGuess = new PreviousWord(this);
 
     this.multiplierContainer = new PIXI.Container();
     const MCBackground = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -49,7 +29,7 @@ export class InputContainer extends PIXI.Container {
     MCBackground.width = bg.width;
     MCBackground.height = bg.height / 4;
     this.multiplierContainer.position.y = MCBackground.height * -4.5;
-    this.multiplierContainer.position.x = PGCBackground.width / -2;
+    this.multiplierContainer.position.x = MCBackground.width / -2;
     this.multiplierContainer.addChild(MCBackground);
 
     this.addChild(this.multiplierContainer);
@@ -61,10 +41,11 @@ export class InputContainer extends PIXI.Container {
   }
 
   //UPDATES THE AMOUNT OF MULTIPLIERS DISPLAYING
-  //TODO: DOESN'T WORK ALL THE TIME
   updateMultiplier(boolean) {
     const children = this.multiplierContainer.children.slice(1);
-    const scoreObject = this.parent.children[2].children[2].children[1];
+    const scoreObject = this.parent.children[2].children[1].children[1];
+
+    //ADD MULITIPLIER
     if (boolean) {
       const baseScore = 25;
       scoreObject.updateScore(baseScore * this.multiplier);
@@ -75,6 +56,7 @@ export class InputContainer extends PIXI.Container {
         }
       }
     } else {
+      //REMOVE MULTIPLIER
       if (this.multiplier > 1) {
         this.multiplier--;
         this.multiplierContainer.removeChild(children[children.length - 1]);
