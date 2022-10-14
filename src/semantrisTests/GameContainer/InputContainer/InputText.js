@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import * as tf from "@tensorflow/tfjs";
 import * as use from "@tensorflow-models/universal-sentence-encoder";
+import { ThinkingMessage } from "./ThinkingMessage";
 
 //CREATE A NEW INSTANCE OF A USER INPUT FIELD
 export class InputText extends PIXI.Text {
@@ -17,6 +18,9 @@ export class InputText extends PIXI.Text {
     this.userGuess = "";
     this.interactive = true;
     this.enabled = false;
+
+    this.thinking = new ThinkingMessage(this)
+
 
     //DON'T HAVE ACCESS TO THESE VALUES UNTIL SPECIFIC METHODS ARE CALLED
     this.wordsContainer = null;
@@ -74,6 +78,10 @@ export class InputText extends PIXI.Text {
   //KEYBOARD
   updateInputText(e, me) {
     if (e.key === "Enter") {
+      this.thinking.text = "Please wait. Tensor is thinking..."
+      this.thinking.position.set(-150, -10) // TODO: centered calculation?
+      this.addChild(this.thinking)
+
       this.wordsContainer = this.parent.parent.parent.children[2];
       let words = this.wordsContainer.children;
       //TARGET WORD OBJECT
@@ -143,6 +151,7 @@ export class InputText extends PIXI.Text {
     }
     console.log(wordObjects);
     this.assignSimilarityIndex(wordObjects, guessObj);
+    this.removeChild(this.thinking)
     tf.engine().endScope();
     console.log("end", tf.memory().numTensors);
   }
