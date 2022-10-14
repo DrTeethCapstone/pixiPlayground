@@ -1,9 +1,10 @@
 import * as PIXI from "pixi.js";
-import { GameContainer } from "./GameContainer/GameContainer";
-import { GameMenu } from "./GameMenu";
+// import { GameContainer } from "./GameContainer/GameContainer";
+// import { GameMenu } from "./GameMenu";
 //ANIMATION PLUGINS
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
+import {GameOverContainer} from "./GameContainer/GameOver/GameOverContainer"
 gsap.registerPlugin(PixiPlugin);
 
 export class Sketch {
@@ -15,17 +16,20 @@ export class Sketch {
       backgroundAlpha: 0,
       resolution: window.devicePixelRatio || 1,
       resizeTo: window,
+      backgroundColor: 0x000000,
     });
 
     document.body.appendChild(this.app.view);
+    this.gameOverContainer = new GameOverContainer(this.app.stage)
 
     //CREATE GAME CONTAINER AND STORE ALL GAME CONTAINERS/ELEMENTS INSIDE
-    this.background = new GameMenu(this.app.stage);
-    this.gameContainer = new GameContainer(this.app.stage);
-    this.gameContainer.position.set(this.width / 2, 0);
+    // this.background = new GameMenu(this.app.stage);
+    // this.gameContainer = new GameContainer(this.app.stage);
+    // this.gameContainer.position.set(this.width / 2, 0);
 
     this.time = 0;
-
+    this.gameOverContainer.setupFirstChildren()
+    console.log(this.app.renderer)
     // const test = new GameMenu(this.app.stage);
 
     //THIS CURRENTLY INITIATES THE GAME LOOP
