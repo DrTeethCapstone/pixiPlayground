@@ -53,7 +53,6 @@ export class Word extends PIXI.Text {
       this.text = originalText;
       this.style.fill = 0xffffff;
     }, 1500);
-
     gsap.to(this, {x: 8, repeat: 0, ease: "elastic(1, 0.5"})
     gsap.to(this, {x: 0})
     gsap.to(this.style, { fill: "red", duration: 1 });

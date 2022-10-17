@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 
-export class ThinkingMessage extends PIXI.Text {
+export class InPlayMessage extends PIXI.Text {
   constructor(parent = null) {
     super("", {
       fontFamily: "Arial",

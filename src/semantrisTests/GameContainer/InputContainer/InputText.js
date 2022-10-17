@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import * as tf from "@tensorflow/tfjs";
 import * as use from "@tensorflow-models/universal-sentence-encoder";
-import { ThinkingMessage } from "./ThinkingMessage";
+import { InPlayMessage } from "./InPlayMessage";
 
 //CREATE A NEW INSTANCE OF A USER INPUT FIELD
 export class InputText extends PIXI.Text {
@@ -19,8 +19,7 @@ export class InputText extends PIXI.Text {
     this.interactive = true;
     this.enabled = false;
 
-    this.thinking = new ThinkingMessage(this)
-
+    this.message = new InPlayMessage(this)
 
     //DON'T HAVE ACCESS TO THESE VALUES UNTIL SPECIFIC METHODS ARE CALLED
     this.wordsContainer = null;
@@ -64,11 +63,13 @@ export class InputText extends PIXI.Text {
     if (targetString.length <= 3 && inputString.length >= 3) {
       if (targetString.slice(0, 3) === inputString.slice(0, 3)) {
         target.invalidGuess(3);
+        this.removeChild(this.message)
         return false;
       }
     } else if (targetString.length > 3 && inputString.length > 3) {
       if (targetString.slice(0, 4) === inputString.slice(0, 4)) {
         target.invalidGuess(4);
+        this.removeChild(this.message)
         return false;
       }
     }
@@ -78,9 +79,9 @@ export class InputText extends PIXI.Text {
   //KEYBOARD
   updateInputText(e, me) {
     if (e.key === "Enter") {
-      this.thinking.text = "Please wait. Tensor is thinking..."
-      this.thinking.position.set(-150, -10) // TODO: centered calculation?
-      this.addChild(this.thinking)
+      this.message.text = "Please wait. Tensor is thinking..."
+      this.message.anchor.set(0.5);
+      this.addChild(this.message)
 
       this.wordsContainer = this.parent.parent.parent.children[2];
       let words = this.wordsContainer.children;
@@ -151,7 +152,7 @@ export class InputText extends PIXI.Text {
     }
     console.log(wordObjects);
     this.assignSimilarityIndex(wordObjects, guessObj);
-    this.removeChild(this.thinking)
+    this.removeChild(this.message)
     tf.engine().endScope();
     console.log("end", tf.memory().numTensors);
   }
