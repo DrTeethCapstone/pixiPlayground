@@ -12,32 +12,17 @@ export class GameOverContainer extends PIXI.Container{
         super()
         this.position.set(window.innerWidth/2, window.innerHeight / 2)
         this.parent = parent
-        
-        // Css style for icons
-  const defaultIcon = "url('./coin.png'),auto";
-      console.log(this.parent)
-
-// Add custom cursor styles
-  // this.parent.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
-
 
         if (this.parent) {
-          this.parent.stage.addChild(this);
-          
+          this.parent.addChild(this);
         }
         const bg = new PIXI.Sprite.from(img)
         bg.anchor.set(0.5)
         const coinImg = new PIXI.Sprite.from(coin)
         this.addChild(bg)
-
-        // this.on('mousemove', () => {
-        //   console.log('hit')
-        //   this.cursor = 'pointer'
-        // })
     }
     setupFirstChildren(){
         const game = new GameOver('GAME', this)
-       
         game.animateGameOn()
         const over = new GameOver('OVER', this)
         over.animateOverOn()

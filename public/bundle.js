@@ -227,25 +227,17 @@ var GameOverContainer = /*#__PURE__*/function (_PIXI$Container) {
 
     _this.position.set(window.innerWidth / 2, window.innerHeight / 2);
 
-    _this.parent = parent; // Css style for icons
-
-    var defaultIcon = "url('./coin.png'),auto";
-    console.log(_this.parent); // Add custom cursor styles
-    // this.parent.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
+    _this.parent = parent;
 
     if (_this.parent) {
-      _this.parent.stage.addChild((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this));
+      _this.parent.addChild((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this));
     }
 
     var bg = new pixi_js__WEBPACK_IMPORTED_MODULE_6__.Sprite.from(_vaporbg_JPG__WEBPACK_IMPORTED_MODULE_8__["default"]);
     bg.anchor.set(0.5);
     var coinImg = new pixi_js__WEBPACK_IMPORTED_MODULE_6__.Sprite.from(_coin_png__WEBPACK_IMPORTED_MODULE_9__["default"]);
 
-    _this.addChild(bg); // this.on('mousemove', () => {
-    //   console.log('hit')
-    //   this.cursor = 'pointer'
-    // })
-
+    _this.addChild(bg);
 
     return _this;
   }
