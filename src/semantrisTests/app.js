@@ -26,12 +26,11 @@ export class Sketch {
     // this.background = new GameMenu(this.app.stage);
     // this.gameContainer = new GameContainer(this.app.stage);
     // this.gameContainer.position.set(this.width / 2, 0);
-
     this.time = 0;
-    this.gameOverContainer.setupFirstChildren()
-    console.log(this.app.renderer)
+    this.gameOverContainer.position.set(this.width/2, this.height/2)
+    this.gameOverContainer.setupFirstChildren(300)
     // const test = new GameMenu(this.app.stage);
-
+    
     //THIS CURRENTLY INITIATES THE GAME LOOP
     this.render();
   }

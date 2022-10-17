@@ -165,6 +165,23 @@ var GameOver = /*#__PURE__*/function (_PIXI$Text) {
         fill: '#FBB03B'
       });
     }
+  }, {
+    key: "animateLeader",
+    value: function animateLeader() {
+      gsap__WEBPACK_IMPORTED_MODULE_7__.gsap.fromTo(this, {
+        x: -1000,
+        y: 150
+      }, {
+        ease: 'elastic',
+        duration: 3,
+        x: 300,
+        y: 150
+      });
+      gsap__WEBPACK_IMPORTED_MODULE_7__.gsap.to(this.style, {
+        fontSize: 25,
+        fill: '#b967ff'
+      });
+    }
   }]);
 
   return GameOver;
@@ -191,10 +208,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var pixi_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/dist/esm/pixi.mjs");
 /* harmony import */ var _GameOver__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./GameOver */ "./src/semantrisTests/GameContainer/GameOver/GameOver.js");
-/* harmony import */ var gsap__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! gsap */ "./node_modules/gsap/index.js");
-/* harmony import */ var gsap_PixiPlugin__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! gsap/PixiPlugin */ "./node_modules/gsap/PixiPlugin.js");
-/* harmony import */ var _vaporbg_JPG__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./vaporbg.JPG */ "./src/semantrisTests/GameContainer/GameOver/vaporbg.JPG");
-/* harmony import */ var _coin_png__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./coin.png */ "./src/semantrisTests/GameContainer/GameOver/coin.png");
+/* harmony import */ var _GameOverImg__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./GameOverImg */ "./src/semantrisTests/GameContainer/GameOver/GameOverImg.js");
+/* harmony import */ var gsap__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! gsap */ "./node_modules/gsap/index.js");
+/* harmony import */ var gsap_PixiPlugin__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! gsap/PixiPlugin */ "./node_modules/gsap/PixiPlugin.js");
+/* harmony import */ var _vaporbg_JPG__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./vaporbg.JPG */ "./src/semantrisTests/GameContainer/GameOver/vaporbg.JPG");
+/* harmony import */ var _coin_png__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./coin.png */ "./src/semantrisTests/GameContainer/GameOver/coin.png");
+/* harmony import */ var _insertCoin_PNG__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./insertCoin.PNG */ "./src/semantrisTests/GameContainer/GameOver/insertCoin.PNG");
 
 
 
@@ -212,7 +231,9 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 
 
-gsap__WEBPACK_IMPORTED_MODULE_10__.gsap.registerPlugin(gsap_PixiPlugin__WEBPACK_IMPORTED_MODULE_11__.PixiPlugin);
+
+
+gsap__WEBPACK_IMPORTED_MODULE_12__.gsap.registerPlugin(gsap_PixiPlugin__WEBPACK_IMPORTED_MODULE_13__.PixiPlugin);
 var GameOverContainer = /*#__PURE__*/function (_PIXI$Container) {
   (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__["default"])(GameOverContainer, _PIXI$Container);
 
@@ -224,35 +245,58 @@ var GameOverContainer = /*#__PURE__*/function (_PIXI$Container) {
     (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, GameOverContainer);
 
     _this = _super.call(this);
-
-    _this.position.set(window.innerWidth / 2, window.innerHeight / 2);
-
     _this.parent = parent;
 
     if (_this.parent) {
       _this.parent.addChild((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this));
     }
 
-    var bg = new pixi_js__WEBPACK_IMPORTED_MODULE_6__.Sprite.from(_vaporbg_JPG__WEBPACK_IMPORTED_MODULE_8__["default"]);
+    var bg = new pixi_js__WEBPACK_IMPORTED_MODULE_6__.Sprite.from(_vaporbg_JPG__WEBPACK_IMPORTED_MODULE_9__["default"]);
     bg.anchor.set(0.5);
-    var coinImg = new pixi_js__WEBPACK_IMPORTED_MODULE_6__.Sprite.from(_coin_png__WEBPACK_IMPORTED_MODULE_9__["default"]);
+    _this.sortableChildren = true;
 
     _this.addChild(bg);
+
+    var coinImg = new pixi_js__WEBPACK_IMPORTED_MODULE_6__.Sprite.from(_coin_png__WEBPACK_IMPORTED_MODULE_10__["default"]);
+    coinImg.anchor.set(0.5);
+    coinImg.height = 100;
+    coinImg.width = 100;
+    coinImg.zIndex = 5;
+    coinImg.alpha = .8;
+    _this.parent.cursor = 'none';
+
+    _this.addChild(coinImg);
+
+    _this.parent.interactive = true;
+
+    _this.parent.on('pointermove', moveCoin);
+
+    function moveCoin(e) {
+      var pos = e.data.global;
+      coinImg.x = pos.x - window.innerWidth / 2;
+      coinImg.y = pos.y - window.innerHeight / 2;
+    }
 
     return _this;
   }
 
   (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(GameOverContainer, [{
+    key: "removeAllChildren",
+    value: function removeAllChildren() {
+      while (this.children[0]) {
+        this.removeChild(this.children[0]);
+      }
+    }
+  }, {
     key: "setupFirstChildren",
-    value: function setupFirstChildren() {
+    value: function setupFirstChildren(currentScore) {
       var _this2 = this;
 
       var game = new _GameOver__WEBPACK_IMPORTED_MODULE_7__.GameOver('GAME', this);
       game.animateGameOn();
       var over = new _GameOver__WEBPACK_IMPORTED_MODULE_7__.GameOver('OVER', this);
       over.animateOverOn();
-      var score = new _GameOver__WEBPACK_IMPORTED_MODULE_7__.GameOver('Score:1000', this); // score.animateScoreOn()
-
+      var score = new _GameOver__WEBPACK_IMPORTED_MODULE_7__.GameOver("Score:".concat(currentScore), this);
       setTimeout(function () {
         game.animateGameOff();
         over.animateOverOff();
@@ -265,12 +309,124 @@ var GameOverContainer = /*#__PURE__*/function (_PIXI$Container) {
         message.position.x = 0;
         message.position.y = -1000;
         message.animateMessage();
+        var insert = new _GameOverImg__WEBPACK_IMPORTED_MODULE_8__.GameOverImg.from(_insertCoin_PNG__WEBPACK_IMPORTED_MODULE_11__["default"]);
+
+        _this2.addChild(insert);
+
+        insert.height = 150;
+        insert.width = 110;
+        insert.zIndex = 10;
+        insert.position.x = -300;
+        insert.position.y = 100;
+        insert.interactive = true;
+        insert.zIndex = 0;
+        insert.alpha = .9;
+        insert.addListener('click', clickInsert);
+
+        function clickInsert(e) {
+          console.log(e);
+        }
+
+        gsap__WEBPACK_IMPORTED_MODULE_12__.gsap.fromTo(insert, {
+          x: 1000
+        }, {
+          ease: 'elastic',
+          duration: 3,
+          x: -300,
+          y: 100
+        });
+        var leader = new _GameOver__WEBPACK_IMPORTED_MODULE_7__.GameOver('Leader Board', _this2);
+        leader.animateLeader();
+        leader.interactive = true;
+        leader.addListener('click', clickLeader);
+
+        function clickLeader(e) {
+          this.parent.removeAllChildren();
+        }
       }, 5500);
     }
   }]);
 
   return GameOverContainer;
 }(pixi_js__WEBPACK_IMPORTED_MODULE_6__.Container);
+
+/***/ }),
+
+/***/ "./src/semantrisTests/GameContainer/GameOver/GameOverImg.js":
+/*!******************************************************************!*\
+  !*** ./src/semantrisTests/GameContainer/GameOver/GameOverImg.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "GameOverImg": () => (/* binding */ GameOverImg)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var pixi_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/dist/esm/pixi.mjs");
+/* harmony import */ var gsap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! gsap */ "./node_modules/gsap/index.js");
+/* harmony import */ var gsap_PixiPlugin__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! gsap/PixiPlugin */ "./node_modules/gsap/PixiPlugin.js");
+
+
+
+
+
+
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__["default"])(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+
+
+
+gsap__WEBPACK_IMPORTED_MODULE_7__.gsap.registerPlugin(gsap_PixiPlugin__WEBPACK_IMPORTED_MODULE_8__.PixiPlugin);
+var GameOverImg = /*#__PURE__*/function (_PIXI$Sprite) {
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__["default"])(GameOverImg, _PIXI$Sprite);
+
+  var _super = _createSuper(GameOverImg);
+
+  function GameOverImg(image) {
+    var _this;
+
+    var parent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, GameOverImg);
+
+    _this = _super.call(this);
+    _this.parent = parent;
+
+    _this.anchor.set(.5);
+
+    if (_this.parent) {
+      _this.parent.addChild((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this));
+    }
+
+    return _this;
+  }
+
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(GameOverImg, [{
+    key: "animateInsert",
+    value: function animateInsert() {
+      gsap__WEBPACK_IMPORTED_MODULE_7__.gsap.fromTo(this, {
+        opacity: 0,
+        x: 100,
+        y: 100,
+        duration: 3
+      }, {
+        opacity: 1
+      });
+    }
+  }]);
+
+  return GameOverImg;
+}(pixi_js__WEBPACK_IMPORTED_MODULE_6__.Sprite);
 
 /***/ }),
 
@@ -321,8 +477,8 @@ var Sketch = /*#__PURE__*/function () {
     // this.gameContainer.position.set(this.width / 2, 0);
 
     this.time = 0;
-    this.gameOverContainer.setupFirstChildren();
-    console.log(this.app.renderer); // const test = new GameMenu(this.app.stage);
+    this.gameOverContainer.position.set(this.width / 2, this.height / 2);
+    this.gameOverContainer.setupFirstChildren(300); // const test = new GameMenu(this.app.stage);
     //THIS CURRENTLY INITIATES THE GAME LOOP
 
     this.render();
@@ -1405,6 +1561,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "59a274680578b2f940402d04fa2f7bb4.png");
+
+/***/ }),
+
+/***/ "./src/semantrisTests/GameContainer/GameOver/insertCoin.PNG":
+/*!******************************************************************!*\
+  !*** ./src/semantrisTests/GameContainer/GameOver/insertCoin.PNG ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "c864d3742e5a122b8010220dad618283.PNG");
 
 /***/ }),
 
