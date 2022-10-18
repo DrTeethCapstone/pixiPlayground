@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Score } from "./Score";
-import test from "../../img/something.webm";
-// console.log(test);
+
 //ANIMATION PLUGIN
 import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";

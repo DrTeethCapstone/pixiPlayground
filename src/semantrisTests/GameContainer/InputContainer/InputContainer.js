@@ -14,40 +14,41 @@ export class InputContainer extends PIXI.Container {
     this.multiplier = 1;
 
     const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
+    bg.alpha = 1;
     bg.anchor.set(0.5, 1);
     bg.height = 100;
     bg.width = this.parent.width;
     this.addChild(bg);
 
     this.interaction = new InputText(this);
-
     this.prevGuess = new PreviousWord(this);
 
     this.multiplierContainer = new PIXI.Container();
     const MCBackground = new PIXI.Sprite(PIXI.Texture.WHITE);
+    // MCBackground.tint = 0xE93479;
     MCBackground.tint = 0xececec;
     MCBackground.width = bg.width;
     MCBackground.height = bg.height / 4;
     this.multiplierContainer.position.y = MCBackground.height * -4.5;
     this.multiplierContainer.position.x = MCBackground.width / -2;
     this.multiplierContainer.addChild(MCBackground);
-
     this.addChild(this.multiplierContainer);
 
     if (this.parent) {
       this.parent.addChild(this);
-      this.position.y = this.parent.height - this.height;
+      this.position.y = this.parent.height;
+      this.position.x = this.parent.width - this.width;
     }
   }
 
   //UPDATES THE AMOUNT OF MULTIPLIERS DISPLAYING
   updateMultiplier(boolean) {
     const children = this.multiplierContainer.children.slice(1);
-    const scoreObject = this.parent.children[2].children[1].children[1];
+    // const scoreObject = this.parent.children[2].children[1].children[1];
 
     //ADD MULITIPLIER
     if (boolean) {
-      const baseScore = 25;
+      // const baseScore = 25;
       // scoreObject.updateScore(baseScore * this.multiplier);
       if (this.multiplier <= 4) {
         this.multiplier++;
@@ -67,14 +68,14 @@ export class InputContainer extends PIXI.Container {
   fromOffScreen() {
     this.visible = true;
     gsap.to(this, {
-      y: this.parent.height - this.height * 1.5,
+      y: this.getGlobalPosition().y - this.height,
       duration: 1,
     });
   }
 
   toOffScreen() {
     gsap.to(this, {
-      y: this.parent.height + this.height / 2,
+      y: this.parent.height + this.height,
       duration: 1,
     });
     this.visible = false;

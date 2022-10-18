@@ -120,6 +120,13 @@ import back118 from "./img/gameMenuBackground/bg/0118.jpg";
 import back119 from "./img/gameMenuBackground/bg/0119.jpg";
 import back120 from "./img/gameMenuBackground/bg/0120.jpg";
 
+import { LoadingScreen } from "./LoadingScreen/LoadingScreen";
+
+//ANIMATION PLUGINS
+import { gsap } from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
+gsap.registerPlugin(PixiPlugin);
+
 export class GameMenu extends PIXI.Container {
   constructor(parent) {
     super();
@@ -246,12 +253,12 @@ export class GameMenu extends PIXI.Container {
       back119,
       back120,
     ];
+
     this.backgroundTextures = [];
-
     this.createBackgroundTextures();
-
     const background = new PIXI.AnimatedSprite(this.backgroundTextures);
     background.anchor.set(0.5);
+    background.scale.set(0.5);
     background.position.x = window.innerWidth / 2;
     background.position.y = window.innerHeight / 2;
     background.animationSpeed = 0.25;
@@ -261,12 +268,54 @@ export class GameMenu extends PIXI.Container {
     if (this.stage) {
       this.stage.addChild(this);
     }
-  }
 
+    //PLAY GAME BUTTON
+    this.playButton = new PIXI.Sprite(PIXI.Texture.WHITE);
+    this.playButton.alpha = 0.2;
+    this.playButton.width = 150;
+    this.playButton.height = 75;
+    this.addChild(this.playButton);
+    this.playButton.anchor.set(0.5);
+    this.playButton.position.x = window.innerWidth / 2 - this.playButton.width;
+    this.playButton.position.y = window.innerHeight / 2;
+    this.playButton.interactive = true;
+
+    //ON HOVER
+    this.playButton.on("mouseover", (evt) => {
+      this.playButton.tint = 0xfff00;
+      this.playButton.cursor = "pointer";
+    });
+    //RESET TO ORIGINAL STATE
+    this.playButton.on("mouseout", (e) => {
+      this.playButton.tint = 0xffffff;
+    });
+    // ON CLICK
+    this.playButton.on("pointerdown", (e) => {
+      this.animateOff(this.stage, true);
+    });
+  }
+  //CREATE TEXTURES FOR ANIMATED SPRITE
   createBackgroundTextures() {
     for (let i = 0; i < this.images.length; i++) {
       const texture = PIXI.Texture.from(this.images[i]);
       this.backgroundTextures.push(texture);
     }
+  }
+
+  animateOff() {
+    gsap.to(this.playButton, { y: -1000, duration: 4 });
+    gsap.to(this, { alpha: 0, duration: 1 });
+    setTimeout(() => {
+      this.removeElement(this);
+      this.createLoadingScreen();
+    }, 3000);
+  }
+
+  removeElement(child) {
+    this.stage.removeChild(child);
+  }
+
+  createLoadingScreen() {
+    new LoadingScreen(this.stage);
   }
 }
