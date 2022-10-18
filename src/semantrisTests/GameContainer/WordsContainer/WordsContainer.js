@@ -45,7 +45,7 @@ export class WordsContainer extends PIXI.Container {
       // console.log("shiftinggggg", this.wordsAsObjects);
       const word = this.wordsAsObjects.shift();
       // console.log(`shiftinggggg`, this.wordsAsObjects);
-      console.log(word);
+      // console.log(word);
 
       this.addChild(word);
       word.updateParent();

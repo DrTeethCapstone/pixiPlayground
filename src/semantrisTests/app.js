@@ -6,6 +6,9 @@ import { gsap } from "gsap";
 import { PixiPlugin } from "gsap/PixiPlugin";
 gsap.registerPlugin(PixiPlugin);
 
+import { TutorialContainer } from "./GameContainer/TutorialContainer/TutorialContainer"
+
+
 export class Sketch {
   //CREATE AND ADD A NEW INSTANCE OF THE CANVAS WITH STYLES
   constructor() {
@@ -20,9 +23,10 @@ export class Sketch {
     document.body.appendChild(this.app.view);
 
     //CREATE GAME CONTAINER AND STORE ALL GAME CONTAINERS/ELEMENTS INSIDE
-    this.background = new GameMenu(this.app.stage);
+    // this.background = new GameMenu(this.app.stage);
     this.gameContainer = new GameContainer(this.app.stage);
     this.gameContainer.position.set(this.width / 2, 0);
+    this.tutorialContainer = new TutorialContainer(this.app.stage)
 
     this.time = 0;
 
